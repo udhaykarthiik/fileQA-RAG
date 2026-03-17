@@ -7,68 +7,335 @@
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/landing.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📄</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <!-- Animated Particle Background -->
+    <div class="particle-bg" id="particleBg"></div>
+    
+    <!-- Grid Overlay for Grok Effect -->
+    <div class="grid-overlay"></div>
+
+    <script>
+    // Create floating particles with enhanced animation
+    function createParticles() {
+        const container = document.getElementById('particleBg');
+        for (let i = 0; i < 100; i++) {  // Increased particle count
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.top = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 20 + 's';
+            particle.style.animationDuration = (15 + Math.random() * 20) + 's';
+            particle.style.width = (1 + Math.random() * 5) + 'px';
+            particle.style.height = particle.style.width;
+            particle.style.background = `rgba(${155 + Math.random() * 100}, ${100 + Math.random() * 100}, ${200 + Math.random() * 55}, ${0.3 + Math.random() * 0.5})`;
+            container.appendChild(particle);
+        }
+    }
+    createParticles();
+    </script>
+
     <div class="container">
         <header>
             <nav>
-                <div class="logo">FileQA</div>
+                <div class="logo">
+                    <span class="logo-text">FileQA</span>
+                    <span class="logo-badge">AI</span>
+                </div>
                 <div class="nav-links">
-                    <a href="/" class="active">Home</a>
-                    <a href="/chat">Chat</a>
+                    <a href="/" class="active">
+                        <i class="fas fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    <a href="/chat">
+                        <i class="fas fa-comment-dots"></i>
+                        <span>Chat</span>
+                    </a>
+                </div>
+                <div class="nav-actions">
+                    <button class="theme-toggle" onclick="toggleTheme()">
+                        <i class="fas fa-moon"></i>
+                    </button>
                 </div>
             </nav>
         </header>
 
         <main>
-            <section class="hero">
-                <h1>Chat with Your Documents</h1>
-                <p>Upload any file and ask questions about its content. Powered by AI.</p>
+            <!-- Hero Section with Typing Effect -->
+            <section class="hero grok-theme">
+                <div class="hero-content">
+                    <h1 class="typing-effect">Chat with Your Documents</h1>
+                    <p class="hero-subtitle">Upload any file and ask questions about its content. Powered by Groq AI.</p>
+                    <div class="hero-stats">
+                        <div class="hero-stat">
+                            <span class="stat-value"></span>
+                            <span class="stat-label">Documents</span>
+                        </div>
+                        <div class="hero-stat">
+                            <span class="stat-value"></span>
+                            <span class="stat-label">Questions</span>
+                        </div>
+                        <div class="hero-stat">
+                            <span class="stat-value"></span>
+                            <span class="stat-label">Accuracy</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-glow"></div>
             </section>
 
+            <!-- Upload Section with Enhanced UI -->
             <section class="upload-section">
-                <div class="upload-area" id="uploadArea">
+                <div class="section-header">
+                    <h2>Upload Your Document</h2>
+                    <p>Drop your file below and let AI do the magic</p>
+                </div>
+                
+                <div class="upload-area pulse-ring" id="uploadArea">
                     <div class="upload-icon">
-                        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 16V4M12 4L8 8M12 4L16 8" stroke="#667eea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M20 16V20H4V16" stroke="#667eea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 16V4M12 4L8 8M12 4L16 8" stroke="url(#gradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M20 16V20H4V16" stroke="url(#gradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <defs>
+                                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" stop-color="#f093fb"/>
+                                    <stop offset="100%" stop-color="#f5576c"/>
+                                </linearGradient>
+                            </defs>
                         </svg>
+                        <div class="pulse-ring-small"></div>
                     </div>
+                    
                     <h3>Drag & Drop your file here</h3>
                     <p>or</p>
-                    <button class="browse-btn" id="browseBtn">Browse Files</button>
+                    
+                    <button class="browse-btn" id="browseBtn">
+                        <i class="fas fa-folder-open"></i>
+                        Browse Files
+                    </button>
+                    
                     <input type="file" id="fileInput" accept=".pdf,.txt" hidden>
-                    <p class="file-info">Supported formats: PDF, TXT (Max 16MB)</p>
+                    
+                    <div class="file-info">
+                        <i class="fas fa-info-circle"></i>
+                        Supported formats: PDF, TXT (Max 16MB)
+                    </div>
+                    
+                    <div class="upload-progress" style="display: none;">
+                        <div class="grok-progress"></div>
+                        <span class="progress-text">Uploading...</span>
+                    </div>
                 </div>
                 
                 <div class="upload-status" id="uploadStatus" style="display: none;">
                     <!-- Status will be shown here -->
                 </div>
+
+                <!-- Quick Upload Examples -->
+                <div class="upload-examples">
+                    <span class="examples-label">Try examples:</span>
+                    <div class="example-chips">
+                        <span class="example-chip" onclick="alert('Sample PDF would upload here')">
+                            <i class="fas fa-file-pdf"></i> Resume.pdf
+                        </span>
+                        <span class="example-chip" onclick="alert('Sample TXT would upload here')">
+                            <i class="fas fa-file-alt"></i> Notes.txt
+                        </span>
+                        <span class="example-chip" onclick="alert('Sample PDF would upload here')">
+                            <i class="fas fa-file-pdf"></i> Report.pdf
+                        </span>
+                    </div>
+                </div>
             </section>
 
+            <!-- Features Section with 3D Cards -->
             <section class="features">
-                <div class="feature-card">
-                    <h3>📄 Multiple Formats</h3>
-                    <p>Support for PDF and TXT files</p>
+                <h2 class="section-title">Why Choose FileQA?</h2>
+                <div class="features-grid">
+                    <div class="feature-card card-3d">
+                        <div class="feature-icon">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <h3>Multiple Formats</h3>
+                        <p>Support for PDF, TXT, and more formats coming soon</p>
+                        <div class="feature-glow"></div>
+                    </div>
+                    
+                    <div class="feature-card card-3d">
+                        <div class="feature-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <h3>Lightning Fast</h3>
+                        <p>Powered by Groq's blazing-fast inference engine</p>
+                        <div class="feature-glow"></div>
+                    </div>
+                    
+                    <div class="feature-card card-3d">
+                        <div class="feature-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h3>Smart RAG</h3>
+                        <p>Retrieval-Augmented Generation for accurate answers</p>
+                        <div class="feature-glow"></div>
+                    </div>
                 </div>
-                <div class="feature-card">
-                    <h3>⚡ Fast Processing</h3>
-                    <p>Powered by Groq's lightning-fast inference</p>
+            </section>
+
+            <!-- Stats Counter Section -->
+            <section class="stats-section">
+                <div class="stat-counter">
+                    <div class="stat-item" id="stat1">
+                        <div class="stat-number" data-target="10">0</div>
+                        <div class="stat-label">Documents Processed</div>
+                    </div>
+                    <div class="stat-item" id="stat2">
+                        <div class="stat-number" data-target="50">0</div>
+                        <div class="stat-label">Questions Answered</div>
+                    </div>
+                    <div class="stat-item" id="stat3">
+                        <div class="stat-number" data-target="99">0<span style="font-size: 20px;">%</span></div>
+                        <div class="stat-label">Satisfaction Rate</div>
+                    </div>
                 </div>
-                <div class="feature-card">
-                    <h3>🔍 Accurate Answers</h3>
-                    <p>RAG technology for precise responses</p>
+            </section>
+
+            <!-- Testimonials / Trust Badges -->
+            <section class="trust-badges">
+                <div class="badge">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Enterprise Grade</span>
+                </div>
+                <div class="badge">
+                    <i class="fas fa-lock"></i>
+                    <span>Secure & Private</span>
+                </div>
+                <div class="badge">
+                    <i class="fas fa-rocket"></i>
+                    <span>Powered by Groq</span>
                 </div>
             </section>
         </main>
 
         <footer>
-            <p>&copy; 2025 FileQA Chatbot. All rights reserved.</p>
+            <div class="footer-content">
+                <div class="footer-logo">FileQA</div>
+                <div class="footer-links">
+                    <a href="#">About</a>
+                    <a href="#">Privacy</a>
+                    <a href="#">Terms</a>
+                    <a href="#">Contact</a>
+                </div>
+            </div>
+            <p class="copyright">&copy; 2026 FileQA Chatbot. Made by Udhay <i class="fas fa-heart" style="color: #f5576c;"></i> </p>
         </footer>
+    </div>
+
+    <!-- Grok-Style Floating Action Button -->
+    <div class="fab-grok" onclick="toggleTheme()" title="Toggle Theme">
+        <i class="fas fa-bolt"></i>
+    </div>
+
+    <!-- Voice Wave Animation (Hidden but ready) -->
+    <div class="voice-wave" style="display: none;">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
     </div>
 
     <script src="/js/main.js"></script>
     <script src="/js/api.js"></script>
     <script src="/js/upload.js"></script>
+
+    <script>
+    // Enhanced theme toggle with icon change
+    function toggleTheme() {
+        document.body.classList.toggle('dark-mode');
+        const fab = document.querySelector('.fab-grok i');
+        if (document.body.classList.contains('dark-mode')) {
+            fab.className = 'fas fa-sun';
+        } else {
+            fab.className = 'fas fa-bolt';
+        }
+    }
+
+    // Animated counter
+    function animateCounter(element, target) {
+        let current = 0;
+        const increment = target / 50;
+        const timer = setInterval(() => {
+            current += increment;
+            if (current >= target) {
+                element.textContent = target;
+                clearInterval(timer);
+            } else {
+                element.textContent = Math.floor(current);
+            }
+        }, 30);
+    }
+
+    // Start counters when they come into view
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const stats = document.querySelectorAll('.stat-number');
+                stats.forEach(stat => {
+                    const target = parseInt(stat.getAttribute('data-target'));
+                    animateCounter(stat, target);
+                });
+                observer.disconnect();
+            }
+        });
+    });
+    
+    observer.observe(document.querySelector('.stats-section'));
+
+    // Particle click effect
+    document.addEventListener('click', function(e) {
+        const particle = document.createElement('div');
+        particle.className = 'particle-click';
+        particle.style.left = e.pageX + 'px';
+        particle.style.top = e.pageY + 'px';
+        document.body.appendChild(particle);
+        setTimeout(() => particle.remove(), 1000);
+    });
+    </script>
+
+    <style>
+    /* Quick inline styles for particle click effect */
+    .particle-click {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background: radial-gradient(circle, #f093fb, #f5576c);
+        border-radius: 50%;
+        pointer-events: none;
+        animation: clickParticle 1s ease-out forwards;
+        z-index: 9999;
+    }
+
+    @keyframes clickParticle {
+        0% {
+            transform: scale(1);
+            opacity: 1;
+        }
+        100% {
+            transform: scale(3);
+            opacity: 0;
+        }
+    }
+
+    .dark-mode {
+        filter: invert(1) hue-rotate(180deg);
+    }
+
+    .dark-mode img,
+    .dark-mode video {
+        filter: invert(1) hue-rotate(180deg);
+    }
+    </style>
 </body>
 </html>

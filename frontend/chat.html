@@ -7,68 +7,208 @@
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/chat.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💬</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <!-- Animated Particle Background -->
+    <div class="particle-bg" id="particleBg"></div>
+    
+    <!-- Grid Overlay for Grok Effect -->
+    <div class="grid-overlay"></div>
+
+    <script>
+    // Create floating particles with enhanced animation
+    function createParticles() {
+        const container = document.getElementById('particleBg');
+        for (let i = 0; i < 100; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.top = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 20 + 's';
+            particle.style.animationDuration = (15 + Math.random() * 20) + 's';
+            particle.style.width = (1 + Math.random() * 5) + 'px';
+            particle.style.height = particle.style.width;
+            particle.style.background = `rgba(${155 + Math.random() * 100}, ${100 + Math.random() * 100}, ${200 + Math.random() * 55}, ${0.3 + Math.random() * 0.5})`;
+            container.appendChild(particle);
+        }
+    }
+    createParticles();
+    </script>
+
     <div class="container">
         <header>
             <nav>
-                <div class="logo">FileQA</div>
+                <div class="logo">
+                    <span class="logo-text">FileQA</span>
+                    <span class="logo-badge">AI</span>
+                </div>
                 <div class="nav-links">
-                    <a href="/">Home</a>
-                    <a href="/chat" class="active">Chat</a>
+                    <a href="/">
+                        <i class="fas fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    <a href="/chat" class="active">
+                        <i class="fas fa-comment-dots"></i>
+                        <span>Chat</span>
+                    </a>
+                </div>
+                <div class="nav-actions">
+                    <button class="theme-toggle" onclick="toggleTheme()">
+                        <i class="fas fa-moon"></i>
+                    </button>
                 </div>
             </nav>
         </header>
 
         <main class="chat-main">
             <div class="chat-container">
-                <!-- Sidebar -->
+                <!-- Sidebar with Enhanced UI -->
                 <div class="chat-sidebar">
+                    <div class="sidebar-header">
+                        <h3><i class="fas fa-folder-open"></i> Current Document</h3>
+                    </div>
+                    
                     <div class="file-info" id="fileInfo">
-                        <h3>Current Document</h3>
                         <div id="currentFile" class="current-file">
-                            <span class="file-name">No file selected</span>
+                            <div class="file-icon">
+                                <i class="fas fa-file-pdf"></i>
+                            </div>
+                            <div class="file-details">
+                                <span class="file-name">No file selected</span>
+                                <span class="file-status">—</span>
+                            </div>
                         </div>
+                        
                         <button class="new-chat-btn" onclick="window.location.href='/'">
+                            <i class="fas fa-upload"></i>
                             Upload New Document
                         </button>
                     </div>
+
+                    <div class="chat-stats">
+                        <div class="stat-item">
+                            <span class="stat-value">0</span>
+                            <span class="stat-label">Messages</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">—</span>
+                            <span class="stat-label">Tokens</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">—</span>
+                            <span class="stat-label">Sources</span>
+                        </div>
+                    </div>
+
                     <div class="chat-info">
-                        <h4>About FileQA</h4>
+                        <h4><i class="fas fa-robot"></i> About FileQA</h4>
                         <p>Ask questions about your document. The AI will answer based only on the content you uploaded.</p>
-                        <p class="info-note">💡 Try asking: "What is this document about?" or "Summarize the main points"</p>
+                        
+                        <div class="info-note">
+                            <i class="fas fa-lightbulb"></i>
+                            <div>
+                                <strong>Try asking:</strong>
+                                <ul>
+                                    <li>"What is this document about?"</li>
+                                    <li>"Summarize the main points"</li>
+                                    <li>"List key findings"</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-footer">
+                        <div class="connection-status">
+                            <span class="status-dot"></span>
+                            <span>Connected to Groq</span>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Chat Area -->
+                <!-- Chat Area with Enhanced UI -->
                 <div class="chat-area">
+                    <div class="chat-header">
+                        <div class="chat-header-info">
+                            <h2><i class="fas fa-comments"></i> Chat</h2>
+                            <span class="badge">RAG Powered</span>
+                        </div>
+                        <div class="chat-actions">
+                            <button class="icon-btn" onclick="clearChat()" title="Clear chat">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                            <button class="icon-btn" onclick="downloadChat()" title="Download chat">
+                                <i class="fas fa-download"></i>
+                            </button>
+                        </div>
+                    </div>
+
                     <div class="messages" id="messages">
                         <div class="message welcome">
-                            <div class="message-content">
-                                👋 Welcome! Upload a document on the home page and start asking questions.
+                            <div class="message-avatar">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div class="message-content-wrapper">
+                                <div class="message-header">
+                                    <span class="message-sender">FileQA Assistant</span>
+                                    <span class="message-time">Just now</span>
+                                </div>
+                                <div class="message-content">
+                                    👋 Welcome! Upload a document on the home page and start asking questions.
+                                </div>
+                                <div class="message-actions">
+                                    <button class="message-action" onclick="copyMessage(this)">
+                                        <i class="far fa-copy"></i>
+                                    </button>
+                                    <button class="message-action" onclick="speakMessage(this)">
+                                        <i class="fas fa-volume-up"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="input-area">
-                        <form id="chatForm" onsubmit="return false;">
-                            <input 
-                                type="text" 
-                                id="userInput" 
-                                placeholder="Type your question here..." 
-                                autocomplete="off"
-                                disabled
-                            >
-                            <button type="submit" id="sendButton" disabled>
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                                    <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                            </button>
-                        </form>
-                        <div class="typing-indicator" id="typingIndicator" style="display: none;">
-                            <span></span>
-                            <span></span>
-                            <span></span>
+                        <div class="input-wrapper">
+                            <form id="chatForm" onsubmit="return false;">
+                                <div class="input-group">
+                                    <input 
+                                        type="text" 
+                                        id="userInput" 
+                                        placeholder="Type your question here..." 
+                                        autocomplete="off"
+                                        disabled
+                                    >
+                                    <div class="input-actions">
+                                        <button type="button" class="input-action" id="attachBtn" disabled>
+                                            <i class="fas fa-paperclip"></i>
+                                        </button>
+                                        <button type="submit" id="sendButton" disabled>
+                                            <i class="fas fa-paper-plane"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                            
+                            <div class="typing-indicator" id="typingIndicator" style="display: none;">
+                                <div class="typing-avatar">
+                                    <i class="fas fa-robot"></i>
+                                </div>
+                                <div class="typing-bubbles">
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                            </div>
+                            
+                            <div class="input-footer">
+                                <span class="model-info">
+                                    <i class="fas fa-microchip"></i>
+                                    Model: Groq Llama 3.1
+                                </span>
+                                <span class="token-count" id="tokenCount">0 tokens</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -76,7 +216,232 @@
         </main>
     </div>
 
+    <!-- Grok-Style Floating Action Button -->
+    <div class="fab-grok" onclick="toggleTheme()" title="Toggle Theme">
+        <i class="fas fa-bolt"></i>
+    </div>
+
+    <!-- Message Templates (Hidden) -->
+    <template id="userMessageTemplate">
+        <div class="message user">
+            <div class="message-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="message-content-wrapper">
+                <div class="message-header">
+                    <span class="message-sender">You</span>
+                    <span class="message-time">Just now</span>
+                </div>
+                <div class="message-content"></div>
+            </div>
+        </div>
+    </template>
+
+    <template id="botMessageTemplate">
+        <div class="message bot">
+            <div class="message-avatar">
+                <i class="fas fa-robot"></i>
+            </div>
+            <div class="message-content-wrapper">
+                <div class="message-header">
+                    <span class="message-sender">FileQA Assistant</span>
+                    <span class="message-time">Just now</span>
+                </div>
+                <div class="message-content"></div>
+                <div class="message-sources"></div>
+                <div class="message-actions">
+                    <button class="message-action" onclick="copyMessage(this)">
+                        <i class="far fa-copy"></i>
+                    </button>
+                    <button class="message-action" onclick="speakMessage(this)">
+                        <i class="fas fa-volume-up"></i>
+                    </button>
+                    <button class="message-action" onclick="regenerateMessage(this)">
+                        <i class="fas fa-redo-alt"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </template>
+
     <script src="/js/api.js"></script>
     <script src="/js/chat.js"></script>
+
+    <script>
+    // Enhanced theme toggle with icon change
+    function toggleTheme() {
+        document.body.classList.toggle('dark-mode');
+        const fab = document.querySelector('.fab-grok i');
+        if (document.body.classList.contains('dark-mode')) {
+            fab.className = 'fas fa-sun';
+        } else {
+            fab.className = 'fas fa-bolt';
+        }
+    }
+
+    // Copy message content
+    function copyMessage(button) {
+        const messageContent = button.closest('.message-content-wrapper').querySelector('.message-content');
+        const text = messageContent.innerText;
+        navigator.clipboard.writeText(text).then(() => {
+            const originalHtml = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-check"></i>';
+            setTimeout(() => {
+                button.innerHTML = originalHtml;
+            }, 2000);
+        });
+    }
+
+    // Text-to-speech
+    function speakMessage(button) {
+        const messageContent = button.closest('.message-content-wrapper').querySelector('.message-content');
+        const text = messageContent.innerText;
+        
+        if ('speechSynthesis' in window) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 1;
+            utterance.pitch = 1;
+            utterance.voice = speechSynthesis.getVoices().find(voice => voice.name.includes('Google UK'));
+            speechSynthesis.speak(utterance);
+            
+            const originalHtml = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-stop"></i>';
+            utterance.onend = () => {
+                button.innerHTML = originalHtml;
+            };
+        }
+    }
+
+    // Regenerate message (will be implemented in chat.js)
+    function regenerateMessage(button) {
+        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        // This will be handled by chat.js
+        setTimeout(() => {
+            button.innerHTML = '<i class="fas fa-redo-alt"></i>';
+        }, 1000);
+    }
+
+    // Clear chat
+    function clearChat() {
+        if (confirm('Are you sure you want to clear the chat?')) {
+            document.getElementById('messages').innerHTML = '';
+            // Add welcome message back
+            const messages = document.getElementById('messages');
+            const welcomeMsg = document.querySelector('.message.welcome').cloneNode(true);
+            messages.appendChild(welcomeMsg);
+        }
+    }
+
+    // Download chat
+    function downloadChat() {
+        const messages = document.querySelectorAll('.message');
+        let chatText = 'FileQA Chat History\n\n';
+        
+        messages.forEach(msg => {
+            const sender = msg.querySelector('.message-sender')?.innerText || 'Unknown';
+            const content = msg.querySelector('.message-content')?.innerText || '';
+            const time = msg.querySelector('.message-time')?.innerText || '';
+            chatText += `[${time}] ${sender}: ${content}\n\n`;
+        });
+        
+        const blob = new Blob([chatText], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `chat-${new Date().toISOString().slice(0,10)}.txt`;
+        a.click();
+    }
+
+    // Update token count (will be updated by chat.js)
+    function updateTokenCount(count) {
+        document.getElementById('tokenCount').textContent = `${count} tokens`;
+    }
+
+    // Particle click effect
+    document.addEventListener('click', function(e) {
+        const particle = document.createElement('div');
+        particle.className = 'particle-click';
+        particle.style.left = e.pageX + 'px';
+        particle.style.top = e.pageY + 'px';
+        document.body.appendChild(particle);
+        setTimeout(() => particle.remove(), 1000);
+    });
+    </script>
+
+    <style>
+    /* Quick inline styles for particle click effect */
+    .particle-click {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background: radial-gradient(circle, #f093fb, #f5576c);
+        border-radius: 50%;
+        pointer-events: none;
+        animation: clickParticle 1s ease-out forwards;
+        z-index: 9999;
+    }
+
+    @keyframes clickParticle {
+        0% {
+            transform: scale(1);
+            opacity: 1;
+        }
+        100% {
+            transform: scale(3);
+            opacity: 0;
+        }
+    }
+
+    .dark-mode {
+        filter: invert(1) hue-rotate(180deg);
+    }
+
+    .dark-mode img,
+    .dark-mode video {
+        filter: invert(1) hue-rotate(180deg);
+    }
+
+    /* Additional inline styles for new elements */
+    .badge {
+        background: linear-gradient(135deg, #f093fb, #f5576c);
+        color: white;
+        padding: 4px 12px;
+        border-radius: 30px;
+        font-size: 12px;
+        font-weight: 600;
+        margin-left: 10px;
+    }
+
+    .icon-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: none;
+        background: rgba(255,255,255,0.1);
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .icon-btn:hover {
+        background: rgba(240, 147, 251, 0.3);
+        transform: scale(1.1);
+    }
+
+    .status-dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #10b981;
+        margin-right: 6px;
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+    }
+    </style>
 </body>
 </html>
