@@ -4,25 +4,52 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 import uuid
 from werkzeug.utils import secure_filename
+import time
 
 # Load environment variables
 load_dotenv()
+
+# Import services
+from services.document_processor import DocumentProcessor
+from services.embedding_service import EmbeddingService
+from services.vector_store import VectorStore
+from services.groq_service import GroqService
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
 
 # Configuration
 app.config['UPLOAD_FOLDER'] = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'uploads')
+app.config['VECTOR_STORE_FOLDER'] = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'vector_store')
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-secret-key')
 
 # Create required folders
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
-os.makedirs(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'vector_store'), exist_ok=True)
+os.makedirs(app.config['VECTOR_STORE_FOLDER'], exist_ok=True)
 
 # Store for uploaded files and vector references
 app.uploaded_files = {}
 app.vector_stores = {}
+app.processed_files = {}
+
+# Initialize services (lazy loading to save memory)
+app.embedding_service = None
+app.groq_service = None
+
+def get_embedding_service():
+    """Lazy load embedding service"""
+    if app.embedding_service is None:
+        print("🔄 Initializing embedding service...")
+        app.embedding_service = EmbeddingService()
+    return app.embedding_service
+
+def get_groq_service():
+    """Lazy load groq service"""
+    if app.groq_service is None:
+        print("🔄 Initializing Groq service...")
+        app.groq_service = GroqService()
+    return app.groq_service
 
 # Get frontend path
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -33,6 +60,7 @@ print("=" * 60)
 print("🚀 FileQA Chatbot Starting...")
 print(f"📁 Frontend: {frontend_folder}")
 print(f"📁 Uploads: {app.config['UPLOAD_FOLDER']}")
+print(f"📁 Vector Store: {app.config['VECTOR_STORE_FOLDER']}")
 print("=" * 60)
 
 # ============================================
@@ -77,7 +105,7 @@ def allowed_file(filename):
 
 @app.route('/api/upload', methods=['POST', 'OPTIONS'])
 def handle_upload():
-    """Handle file upload"""
+    """Handle file upload and processing"""
     # Handle preflight OPTIONS request
     if request.method == 'OPTIONS':
         response = jsonify({'status': 'ok'})
@@ -86,7 +114,9 @@ def handle_upload():
         response.headers.add('Access-Control-Allow-Methods', 'POST')
         return response, 200
     
-    print("📤 Upload endpoint hit!")
+    print("\n" + "=" * 40)
+    print("📤 UPLOAD ENDPOINT HIT")
+    print("=" * 40)
     
     if 'file' not in request.files:
         print("❌ No file in request")
@@ -117,14 +147,55 @@ def handle_upload():
         app.uploaded_files[file_id] = {
             'filename': filename,
             'path': file_path,
-            'status': 'uploaded'
+            'status': 'processing',
+            'upload_time': time.time()
         }
         
+        # Start processing in background (for demo, we'll process synchronously)
+        # In production, you'd want to do this in a background task
+        try:
+            # Process document
+            print(f"\n🔧 Processing document: {filename}")
+            processor = DocumentProcessor()
+            
+            # Extract text
+            text = processor.process_file(file_path)
+            print(f"📝 Extracted {len(text)} characters")
+            
+            # Create chunks
+            chunks = processor.create_chunks(text)
+            
+            # Generate embeddings
+            embedding_service = get_embedding_service()
+            chunks_with_embeddings = embedding_service.generate_chunk_embeddings(chunks)
+            
+            # Create vector store
+            vector_store = VectorStore(embedding_service.embedding_dim)
+            vector_store.add_chunks(chunks_with_embeddings)
+            
+            # Save vector store
+            vector_store_path = os.path.join(app.config['VECTOR_STORE_FOLDER'], file_id)
+            vector_store.save(vector_store_path)
+            
+            # Store reference
+            app.vector_stores[file_id] = vector_store
+            app.uploaded_files[file_id]['status'] = 'processed'
+            app.uploaded_files[file_id]['chunks'] = len(chunks)
+            app.uploaded_files[file_id]['vector_store_path'] = vector_store_path
+            
+            print(f"✅ Document processed successfully! {len(chunks)} chunks created")
+            
+        except Exception as e:
+            print(f"❌ Error processing document: {str(e)}")
+            app.uploaded_files[file_id]['status'] = 'error'
+            app.uploaded_files[file_id]['error'] = str(e)
+        
         return jsonify({
-            'message': 'File uploaded successfully',
+            'message': 'File uploaded and processed successfully',
             'file_id': file_id,
             'filename': filename,
-            'chunks': 0
+            'chunks': app.uploaded_files[file_id].get('chunks', 0),
+            'status': app.uploaded_files[file_id]['status']
         }), 200
         
     except Exception as e:
@@ -134,7 +205,6 @@ def handle_upload():
 @app.route('/api/status/<file_id>', methods=['GET', 'OPTIONS'])
 def handle_status(file_id):
     """Get file processing status"""
-    # Handle preflight OPTIONS request
     if request.method == 'OPTIONS':
         response = jsonify({'status': 'ok'})
         response.headers.add('Access-Control-Allow-Origin', '*')
@@ -143,10 +213,12 @@ def handle_status(file_id):
         return response, 200
     
     if file_id in app.uploaded_files:
+        file_info = app.uploaded_files[file_id]
         return jsonify({
-            'status': 'processed',
+            'status': file_info.get('status', 'unknown'),
             'file_id': file_id,
-            'filename': app.uploaded_files[file_id]['filename']
+            'filename': file_info['filename'],
+            'chunks': file_info.get('chunks', 0)
         }), 200
     
     return jsonify({'error': 'File not found'}), 404
@@ -157,7 +229,7 @@ def handle_status(file_id):
 
 @app.route('/api/chat', methods=['POST', 'OPTIONS'])
 def handle_chat():
-    """Handle chat messages"""
+    """Handle chat messages with RAG"""
     # Handle preflight OPTIONS request
     if request.method == 'OPTIONS':
         response = jsonify({'status': 'ok'})
@@ -168,7 +240,9 @@ def handle_chat():
     
     try:
         data = request.json
-        print(f"💬 Chat request received")
+        print("\n" + "=" * 40)
+        print("💬 CHAT REQUEST RECEIVED")
+        print("=" * 40)
         
         if not data or 'message' not in data:
             return jsonify({'error': 'No message provided'}), 400
@@ -176,8 +250,8 @@ def handle_chat():
         message = data['message']
         file_id = data.get('file_id')
         
-        print(f"   Message: {message[:50]}...")
-        print(f"   File ID: {file_id}")
+        print(f"📝 Question: {message}")
+        print(f"🆔 File ID: {file_id}")
         
         if not file_id:
             return jsonify({'error': 'No file selected'}), 400
@@ -186,18 +260,61 @@ def handle_chat():
         if file_id not in app.uploaded_files:
             return jsonify({'error': 'File not found. Please upload again.'}), 404
         
-        filename = app.uploaded_files[file_id]['filename']
+        file_info = app.uploaded_files[file_id]
         
-        # Simple response for now (will be replaced with actual RAG)
-        response = {
-            'answer': f"I see you're asking about '{message}'. The document '{filename}' has been uploaded successfully. The RAG pipeline will be fully implemented in the next step!",
-            'sources': [
-                {'text': f'Source: {filename}', 'score': 0.95}
-            ],
+        # Check if file is still processing
+        if file_info.get('status') == 'processing':
+            return jsonify({
+                'answer': "⏳ Your document is still being processed. Please wait a moment and try again.",
+                'sources': []
+            }), 200
+        
+        if file_info.get('status') == 'error':
+            return jsonify({
+                'answer': f"❌ There was an error processing your document: {file_info.get('error', 'Unknown error')}",
+                'sources': []
+            }), 200
+        
+        # Get or load vector store
+        if file_id in app.vector_stores:
+            vector_store = app.vector_stores[file_id]
+            print("📂 Using cached vector store")
+        else:
+            # Load from disk
+            vector_store_path = os.path.join(app.config['VECTOR_STORE_FOLDER'], file_id)
+            if os.path.exists(f"{vector_store_path}.index"):
+                print("📂 Loading vector store from disk")
+                embedding_service = get_embedding_service()
+                vector_store = VectorStore(embedding_service.embedding_dim)
+                vector_store.load(vector_store_path)
+                app.vector_stores[file_id] = vector_store
+            else:
+                return jsonify({'error': 'Document not properly processed'}), 404
+        
+        # Generate embedding for question
+        embedding_service = get_embedding_service()
+        question_embedding = embedding_service.generate_embedding(message)
+        
+        # Search for relevant chunks
+        relevant_chunks = vector_store.similarity_search(question_embedding, k=5)
+        
+        if not relevant_chunks:
+            return jsonify({
+                'answer': "I couldn't find relevant information in the document to answer your question.",
+                'sources': []
+            }), 200
+        
+        # Generate answer using Groq
+        groq_service = get_groq_service()
+        result = groq_service.generate_answer(message, relevant_chunks, data.get('history', []))
+        
+        print(f"✅ Answer generated successfully")
+        
+        return jsonify({
+            'answer': result['answer'],
+            'sources': result['sources'],
             'file_id': file_id
-        }
-        
-        return jsonify(response), 200
+        }), 200
         
     except Exception as e:
         print(f"❌ Chat error: {str(e)}")
@@ -217,11 +334,38 @@ def handle_health():
         response.headers.add('Access-Control-Allow-Methods', 'GET')
         return response, 200
     
+    # Test Groq connection
+    groq_ok = False
+    try:
+        groq_service = get_groq_service()
+        groq_ok = groq_service.test_connection()
+    except:
+        pass
+    
     return jsonify({
         'status': 'healthy',
+        'groq_connected': groq_ok,
         'uploads': len(app.uploaded_files),
-        'vector_stores': len(app.vector_stores)
+        'vector_stores': len(app.vector_stores),
+        'processed_files': len([f for f in app.uploaded_files.values() if f.get('status') == 'processed'])
     }), 200
+
+# ============================================
+# API ROUTES - DEBUG (Optional)
+# ============================================
+
+@app.route('/api/files', methods=['GET'])
+def list_files():
+    """List all uploaded files (for debugging)"""
+    files = []
+    for file_id, info in app.uploaded_files.items():
+        files.append({
+            'file_id': file_id,
+            'filename': info['filename'],
+            'status': info.get('status', 'unknown'),
+            'chunks': info.get('chunks', 0)
+        })
+    return jsonify(files), 200
 
 # ============================================
 # ERROR HANDLERS
@@ -240,6 +384,7 @@ def handle_too_large(error):
 @app.errorhandler(500)
 def handle_internal_error(error):
     """Handle 500 errors"""
+    print(f"❌ Internal error: {error}")
     return jsonify({'error': 'Internal server error'}), 500
 
 # ============================================
@@ -247,12 +392,21 @@ def handle_internal_error(error):
 # ============================================
 
 if __name__ == '__main__':
-    print("\n🌐 Server running at http://localhost:5000")
+    print("\n" + "=" * 60)
+    print("🌐 SERVER RUNNING AT http://localhost:5000")
+    print("=" * 60)
     print("📝 Available endpoints:")
     print("   - GET  /              - Landing page")
     print("   - GET  /chat          - Chat page")
     print("   - POST /api/upload    - Upload file")
     print("   - POST /api/chat      - Send message")
     print("   - GET  /api/health    - Health check")
-    print("\n✅ Ready to accept connections!\n")
+    print("   - GET  /api/files     - List files (debug)")
+    print("\n✅ RAG Pipeline Ready!")
+    print("   - PDF text extraction")
+    print("   - Semantic chunking")
+    print("   - Vector embeddings")
+    print("   - Groq LLM integration")
+    print("=" * 60 + "\n")
+    
     app.run(debug=True, port=5000, host='0.0.0.0')

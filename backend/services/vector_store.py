@@ -9,9 +9,10 @@ class VectorStore:
     
     def __init__(self, dimension: int):
         self.dimension = dimension
-        self.index = faiss.IndexFlatL2(dimension)  # L2 distance index
-        self.chunks = []  # Store original chunks with metadata
-        self.embeddings = []  # Store embeddings
+        self.index = faiss.IndexFlatL2(dimension)
+        self.chunks = []
+        self.embeddings = []
+        print(f"📊 Created vector store with dimension {dimension}")
     
     def add_chunks(self, chunks: List[Dict[str, Any]]):
         """Add chunks with embeddings to the store"""
@@ -23,6 +24,8 @@ class VectorStore:
             self.index.add(embedding)
             self.chunks.append(chunk)
             self.embeddings.append(chunk['embedding'])
+        
+        print(f"✅ Added {len(chunks)} chunks to vector store")
     
     def similarity_search(self, query_embedding: List[float], k: int = 4) -> List[Dict[str, Any]]:
         """Search for most similar chunks"""
@@ -34,11 +37,14 @@ class VectorStore:
         # Return relevant chunks
         results = []
         for i, idx in enumerate(indices[0]):
-            if idx != -1:  # Valid index
+            if idx != -1 and idx < len(self.chunks):
                 chunk = self.chunks[idx].copy()
-                chunk['similarity_score'] = float(1 / (1 + distances[0][i]))  # Convert distance to similarity
+                # Convert L2 distance to similarity score (0-1)
+                similarity = 1 / (1 + distances[0][i])
+                chunk['similarity_score'] = float(similarity)
                 results.append(chunk)
         
+        print(f"🔍 Found {len(results)} relevant chunks")
         return results
     
     def save(self, file_path: str):
@@ -54,6 +60,8 @@ class VectorStore:
                 'chunks': self.chunks,
                 'dimension': self.dimension
             }, f)
+        
+        print(f"💾 Vector store saved to {file_path}")
     
     def load(self, file_path: str):
         """Load the vector store from disk"""
@@ -66,4 +74,5 @@ class VectorStore:
             self.chunks = data['chunks']
             self.dimension = data['dimension']
         
+        print(f"📂 Vector store loaded from {file_path}")
         return self
