@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FileQA - Chat with Your Documents</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/landing.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📄</text></svg>">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <nav>
+                <div class="logo">FileQA</div>
+                <div class="nav-links">
+                    <a href="/" class="active">Home</a>
+                    <a href="/chat">Chat</a>
+                </div>
+            </nav>
+        </header>
+
+        <main>
+            <section class="hero">
+                <h1>Chat with Your Documents</h1>
+                <p>Upload any file and ask questions about its content. Powered by AI.</p>
+            </section>
+
+            <section class="upload-section">
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">
+                        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 16V4M12 4L8 8M12 4L16 8" stroke="#667eea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M20 16V20H4V16" stroke="#667eea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3>Drag & Drop your file here</h3>
+                    <p>or</p>
+                    <button class="browse-btn" id="browseBtn">Browse Files</button>
+                    <input type="file" id="fileInput" accept=".pdf,.txt" hidden>
+                    <p class="file-info">Supported formats: PDF, TXT (Max 16MB)</p>
+                </div>
+                
+                <div class="upload-status" id="uploadStatus" style="display: none;">
+                    <!-- Status will be shown here -->
+                </div>
+            </section>
+
+            <section class="features">
+                <div class="feature-card">
+                    <h3>📄 Multiple Formats</h3>
+                    <p>Support for PDF and TXT files</p>
+                </div>
+                <div class="feature-card">
+                    <h3>⚡ Fast Processing</h3>
+                    <p>Powered by Groq's lightning-fast inference</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🔍 Accurate Answers</h3>
+                    <p>RAG technology for precise responses</p>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 FileQA Chatbot. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script src="/js/main.js"></script>
+    <script src="/js/api.js"></script>
+    <script src="/js/upload.js"></script>
+</body>
+</html>

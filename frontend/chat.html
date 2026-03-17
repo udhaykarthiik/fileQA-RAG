@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with Document - FileQA</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/chat.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💬</text></svg>">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <nav>
+                <div class="logo">FileQA</div>
+                <div class="nav-links">
+                    <a href="/">Home</a>
+                    <a href="/chat" class="active">Chat</a>
+                </div>
+            </nav>
+        </header>
+
+        <main class="chat-main">
+            <div class="chat-container">
+                <!-- Sidebar -->
+                <div class="chat-sidebar">
+                    <div class="file-info" id="fileInfo">
+                        <h3>Current Document</h3>
+                        <div id="currentFile" class="current-file">
+                            <span class="file-name">No file selected</span>
+                        </div>
+                        <button class="new-chat-btn" onclick="window.location.href='/'">
+                            Upload New Document
+                        </button>
+                    </div>
+                    <div class="chat-info">
+                        <h4>About FileQA</h4>
+                        <p>Ask questions about your document. The AI will answer based only on the content you uploaded.</p>
+                        <p class="info-note">💡 Try asking: "What is this document about?" or "Summarize the main points"</p>
+                    </div>
+                </div>
+
+                <!-- Chat Area -->
+                <div class="chat-area">
+                    <div class="messages" id="messages">
+                        <div class="message welcome">
+                            <div class="message-content">
+                                👋 Welcome! Upload a document on the home page and start asking questions.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="input-area">
+                        <form id="chatForm" onsubmit="return false;">
+                            <input 
+                                type="text" 
+                                id="userInput" 
+                                placeholder="Type your question here..." 
+                                autocomplete="off"
+                                disabled
+                            >
+                            <button type="submit" id="sendButton" disabled>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                    <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                        </form>
+                        <div class="typing-indicator" id="typingIndicator" style="display: none;">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="/js/api.js"></script>
+    <script src="/js/chat.js"></script>
+</body>
+</html>

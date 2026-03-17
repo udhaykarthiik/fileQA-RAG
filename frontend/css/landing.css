@@ -1,0 +1,146 @@
+.hero {
+    text-align: center;
+    padding: 80px 0 40px;
+    color: #2c3e50;
+}
+
+.hero h1 {
+    font-size: 48px;
+    margin-bottom: 20px;
+    color: #d4a373;
+}
+
+.hero p {
+    font-size: 18px;
+    color: #b7b7a4;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.upload-section {
+    background: white;
+    border-radius: 30px;
+    padding: 50px;
+    box-shadow: 0 20px 40px rgba(212, 163, 115, 0.1);
+    margin: 40px 0;
+    border: 1px solid rgba(212, 163, 115, 0.2);
+}
+
+.upload-area {
+    text-align: center;
+    padding: 60px;
+    border: 3px dashed #d4a373;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: #fffdf9;
+}
+
+.upload-area:hover {
+    background: #fff9f0;
+    border-color: #c48b5c;
+}
+
+.upload-icon {
+    margin-bottom: 20px;
+}
+
+.upload-icon svg {
+    width: 80px;
+    height: 80px;
+    stroke: #d4a373;
+}
+
+.upload-area h3 {
+    font-size: 24px;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.upload-area p {
+    color: #b7b7a4;
+    margin: 10px 0;
+}
+
+.browse-btn {
+    background: #d4a373;
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin: 20px 0;
+    transition: all 0.3s;
+}
+
+.browse-btn:hover {
+    background: #c48b5c;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(212, 163, 115, 0.3);
+}
+
+.file-info {
+    color: #b7b7a4;
+    font-size: 14px;
+    margin-top: 20px;
+}
+
+.upload-status {
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    font-weight: 500;
+}
+
+.upload-status.success {
+    background: #e6ffe6;
+    color: #2c3e50;
+    border: 1px solid #d4a373;
+}
+
+.upload-status.error {
+    background: #ffe6e6;
+    color: #c48b5c;
+    border: 1px solid #d4a373;
+}
+
+.upload-status.info {
+    background: #fff5e6;
+    color: #2c3e50;
+    border: 1px solid #d4a373;
+}
+
+.features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin: 60px 0;
+}
+
+.feature-card {
+    background: white;
+    padding: 40px 30px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(212, 163, 115, 0.1);
+    transition: transform 0.3s;
+    border: 1px solid rgba(212, 163, 115, 0.1);
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(212, 163, 115, 0.15);
+}
+
+.feature-card h3 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: #d4a373;
+}
+
+.feature-card p {
+    color: #b7b7a4;
+    line-height: 1.6;
+}
