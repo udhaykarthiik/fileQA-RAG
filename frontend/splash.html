@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FileQA - Your Intelligent Document Assistant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Particle Background */
+        .particle-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float-particle 15s infinite linear;
+        }
+
+        @keyframes float-particle {
+            from {
+                transform: translateY(100vh) translateX(-10vw);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(-100vh) translateX(10vw);
+                opacity: 0.8;
+            }
+        }
+
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(240, 147, 251, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(240, 147, 251, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Splash Screen */
+        .splash-screen {
+            position: relative;
+            z-index: 2;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 1s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .splash-content {
+            text-align: center;
+            animation: scaleIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Logo Animation */
+        .logo-container {
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .logo-main {
+            font-size: 80px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff 0%, #ffe0f0 50%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 20px rgba(240, 147, 251, 0.5); }
+            50% { text-shadow: 0 0 40px rgba(240, 147, 251, 0.8); }
+        }
+
+        .logo-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            padding: 5px 15px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+            margin-left: 10px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.9; }
+        }
+
+        /* Tagline */
+        .tagline {
+            font-size: 24px;
+            color: white;
+            margin-bottom: 20px;
+            font-weight: 500;
+            letter-spacing: -0.02em;
+        }
+
+        .subtagline {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 40px;
+        }
+
+        /* Loading Animation */
+        .loading-container {
+            margin: 40px auto;
+            width: 200px;
+        }
+
+        .loading-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .loading-progress {
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #f093fb, #f5576c);
+            animation: loading 2s ease infinite;
+        }
+
+        @keyframes loading {
+            0% { left: -100%; }
+            50% { left: 0; }
+            100% { left: 100%; }
+        }
+
+        .loading-text {
+            text-align: center;
+            margin-top: 15px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            letter-spacing: 1px;
+        }
+
+        /* Loading Dots Animation */
+        .loading-dots {
+            display: inline-flex;
+            gap: 4px;
+        }
+
+        .loading-dots span {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.7);
+            animation: bounce 1.4s infinite;
+        }
+
+        .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes bounce {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+
+        /* Version */
+        .version {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 12px;
+            z-index: 2;
+        }
+
+        /* Animated Circle */
+        .circle-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            border: 2px solid rgba(240, 147, 251, 0.3);
+            animation: expand 2s ease-out infinite;
+            z-index: 1;
+        }
+
+        @keyframes expand {
+            0% {
+                width: 200px;
+                height: 200px;
+                opacity: 0.5;
+            }
+            100% {
+                width: 400px;
+                height: 400px;
+                opacity: 0;
+            }
+        }
+
+        .circle-ring-delay {
+            animation: expand 2s ease-out infinite 1s;
+        }
+    </style>
+</head>
+<body>
+    <div class="particle-bg" id="particleBg"></div>
+    <div class="grid-overlay"></div>
+    
+    <div class="circle-ring"></div>
+    <div class="circle-ring circle-ring-delay"></div>
+
+    <div class="splash-screen">
+        <div class="splash-content">
+            <div class="logo-container">
+                <div class="logo-main">
+                    FileQA
+                    <span class="logo-badge">AI</span>
+                </div>
+            </div>
+            
+            <div class="tagline">Your Intelligent Document Assistant</div>
+            <div class="subtagline">Powered by Groq AI • RAG Technology</div>
+            
+            <div class="loading-container">
+                <div class="loading-bar">
+                    <div class="loading-progress"></div>
+                </div>
+                <div class="loading-text">
+                    Loading amazing features
+                    <div class="loading-dots">
+                        <span>.</span><span>.</span><span>.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="version">v2.0 • RAG Powered</div>
+
+    <script>
+        // Create floating particles
+        function createParticles() {
+            const container = document.getElementById('particleBg');
+            for (let i = 0; i < 150; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (15 + Math.random() * 20) + 's';
+                particle.style.width = (2 + Math.random() * 6) + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.background = `rgba(${155 + Math.random() * 100}, ${100 + Math.random() * 100}, ${200 + Math.random() * 55}, ${0.3 + Math.random() * 0.5})`;
+                container.appendChild(particle);
+            }
+        }
+        createParticles();
+
+        // Check authentication and redirect after splash
+        async function checkAuthAndRedirect() {
+            // Show splash for 2 seconds minimum
+            await new Promise(resolve => setTimeout(resolve, 2500));
+            
+            try {
+                const response = await fetch('/api/auth/me');
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.user) {
+                        // User is logged in, go to dashboard
+                        window.location.href = '/dashboard';
+                    } else {
+                        // Not logged in, go to login
+                        window.location.href = '/login';
+                    }
+                } else {
+                    // Not authenticated, go to login
+                    window.location.href = '/login';
+                }
+            } catch (error) {
+                console.error('Auth check error:', error);
+                window.location.href = '/login';
+            }
+        }
+
+        // Start the redirect process
+        checkAuthAndRedirect();
+    </script>
+</body>
+</html>

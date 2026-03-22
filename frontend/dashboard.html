@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - FileQA</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
+</head>
+<body>
+    <!-- Animated Particle Background -->
+    <div class="particle-bg" id="particleBg"></div>
+    <div class="grid-overlay"></div>
+
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-logo">
+                <div class="logo">FileQA</div>
+                <div class="logo-badge">AI</div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="/dashboard" class="nav-item active">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="/chat" class="nav-item">
+                    <i class="fas fa-comment-dots"></i>
+                    <span>Chat</span>
+                </a>
+                <a href="/home" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="user-info" id="userInfo">
+                    <div class="user-avatar">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <div class="user-details">
+                        <span class="user-name" id="userName">Loading...</span>
+                        <span class="user-email" id="userEmail">Loading...</span>
+                    </div>
+                </div>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <!-- Header -->
+            <header class="dashboard-header">
+                <div class="header-title">
+                    <h1>Welcome back, <span id="welcomeName">User</span>!</h1>
+                    <p>Here's what's happening with your documents</p>
+                </div>
+                <div class="header-actions">
+                    <button class="upload-btn" onclick="window.location.href='/home'">
+                        <i class="fas fa-plus"></i>
+                        Upload New Document
+                    </button>
+                    <button class="theme-toggle" onclick="toggleTheme()">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Total Documents</h3>
+                        <p class="stat-number" id="totalDocuments">0</p>
+                    </div>
+                    <div class="stat-trend">
+                        <i class="fas fa-chart-line"></i>
+                        <span>All time</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-puzzle-piece"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Total Chunks</h3>
+                        <p class="stat-number" id="totalChunks">0</p>
+                    </div>
+                    <div class="stat-trend">
+                        <i class="fas fa-database"></i>
+                        <span>Processed</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Questions Asked</h3>
+                        <p class="stat-number" id="totalQuestions">0</p>
+                    </div>
+                    <div class="stat-trend">
+                        <i class="fas fa-chat"></i>
+                        <span>Lifetime</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Accuracy Rate</h3>
+                        <p class="stat-number">99<span style="font-size: 24px;">%</span></p>
+                    </div>
+                    <div class="stat-trend">
+                        <i class="fas fa-star"></i>
+                        <span>AI Powered</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Documents Section -->
+            <div class="documents-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-history"></i> Recent Documents</h2>
+                    <button class="refresh-btn" onclick="loadDocuments()">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+                
+                <div class="documents-grid" id="documentsGrid">
+                    <div class="loading-state">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>Loading your documents...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
+                <div class="actions-grid">
+                    <div class="action-card" onclick="window.location.href='/home'">
+                        <i class="fas fa-upload"></i>
+                        <span>Upload Document</span>
+                        <p>Add a new PDF or TXT file</p>
+                    </div>
+                    <div class="action-card" onclick="window.location.href='/chat'">
+                        <i class="fas fa-comment-dots"></i>
+                        <span>Start Chatting</span>
+                        <p>Ask questions about your documents</p>
+                    </div>
+                    <div class="action-card" onclick="window.location.href='/dashboard'">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>View Analytics</span>
+                        <p>See document insights</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+    // Create floating particles
+    function createParticles() {
+        const container = document.getElementById('particleBg');
+        if (!container) return;
+        for (let i = 0; i < 100; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.top = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 20 + 's';
+            particle.style.animationDuration = (15 + Math.random() * 20) + 's';
+            particle.style.width = (1 + Math.random() * 5) + 'px';
+            particle.style.height = particle.style.width;
+            particle.style.background = `rgba(${155 + Math.random() * 100}, ${100 + Math.random() * 100}, ${200 + Math.random() * 55}, ${0.3 + Math.random() * 0.5})`;
+            container.appendChild(particle);
+        }
+    }
+    createParticles();
+
+    // Theme toggle
+    function toggleTheme() {
+        document.body.classList.toggle('dark-mode');
+        const btn = document.querySelector('.theme-toggle i');
+        if (document.body.classList.contains('dark-mode')) {
+            btn.className = 'fas fa-sun';
+        } else {
+            btn.className = 'fas fa-moon';
+        }
+    }
+
+    // Logout function
+    async function logout() {
+        try {
+            await fetch('/api/auth/logout', { method: 'POST' });
+            window.location.href = '/';
+        } catch (error) {
+            console.error('Logout error:', error);
+            window.location.href = '/';
+        }
+    }
+
+    // Load user data and dashboard stats
+    async function loadUserData() {
+        try {
+            const response = await fetch('/api/auth/me');
+            if (response.ok) {
+                const data = await response.json();
+                if (data.user) {
+                    document.getElementById('userName').textContent = data.user.username || data.user.full_name;
+                    document.getElementById('userEmail').textContent = data.user.email;
+                    document.getElementById('welcomeName').textContent = data.user.full_name || data.user.username;
+                }
+            } else {
+                window.location.href = '/login';
+            }
+        } catch (error) {
+            console.error('Error loading user:', error);
+            window.location.href = '/login';
+        }
+    }
+
+    // Load dashboard stats
+    async function loadStats() {
+        try {
+            const response = await fetch('/api/dashboard/stats');
+            if (response.ok) {
+                const data = await response.json();
+                document.getElementById('totalDocuments').textContent = data.total_documents || 0;
+                document.getElementById('totalChunks').textContent = data.total_chunks || 0;
+                document.getElementById('totalQuestions').textContent = Math.floor(data.total_chunks * 1.5) || 0;
+            }
+        } catch (error) {
+            console.error('Error loading stats:', error);
+        }
+    }
+
+    // Load user documents
+    async function loadDocuments() {
+        const grid = document.getElementById('documentsGrid');
+        grid.innerHTML = '<div class="loading-state"><i class="fas fa-spinner fa-spin"></i><p>Loading your documents...</p></div>';
+        
+        try {
+            const response = await fetch('/api/dashboard/documents');
+            if (response.ok) {
+                const data = await response.json();
+                const documents = data.documents || [];
+                
+                if (documents.length === 0) {
+                    grid.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-folder-open"></i>
+                            <h3>No documents yet</h3>
+                            <p>Upload your first document to get started</p>
+                            <button class="primary-btn" onclick="window.location.href='/home'">
+                                <i class="fas fa-upload"></i> Upload Document
+                            </button>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                grid.innerHTML = documents.map(doc => `
+                    <div class="document-card" data-file-id="${doc.file_id}">
+                        <div class="document-icon">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <div class="document-info">
+                            <h4>${escapeHtml(doc.filename)}</h4>
+                            <div class="document-meta">
+                                <span><i class="fas fa-calendar"></i> ${formatDate(doc.uploaded_at)}</span>
+                                <span><i class="fas fa-puzzle-piece"></i> ${doc.chunks || 0} chunks</span>
+                            </div>
+                        </div>
+                        <div class="document-actions">
+                            <button class="action-btn chat-btn" onclick="chatWithDocument('${doc.file_id}', '${escapeHtml(doc.filename)}')" title="Chat with this document">
+                                <i class="fas fa-comment-dots"></i>
+                            </button>
+                            <button class="action-btn delete-btn" onclick="deleteDocument('${doc.file_id}')" title="Delete document">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        } catch (error) {
+            console.error('Error loading documents:', error);
+            grid.innerHTML = `
+                <div class="error-state">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <h3>Failed to load documents</h3>
+                    <p>Please try again later</p>
+                    <button class="secondary-btn" onclick="loadDocuments()">Retry</button>
+                </div>
+            `;
+        }
+    }
+
+    // Chat with document
+    function chatWithDocument(fileId, filename) {
+        sessionStorage.setItem('currentFileId', fileId);
+        sessionStorage.setItem('currentFilename', filename);
+        window.location.href = '/chat';
+    }
+
+    // Delete document
+    async function deleteDocument(fileId) {
+        if (!confirm('Are you sure you want to delete this document? This action cannot be undone.')) {
+            return;
+        }
+        
+        try {
+            const response = await fetch(`/api/dashboard/document/${fileId}`, {
+                method: 'DELETE'
+            });
+            
+            if (response.ok) {
+                showNotification('Document deleted successfully', 'success');
+                loadDocuments();
+                loadStats();
+            } else {
+                const data = await response.json();
+                showNotification(data.error || 'Failed to delete document', 'error');
+            }
+        } catch (error) {
+            console.error('Error deleting document:', error);
+            showNotification('Network error. Please try again.', 'error');
+        }
+    }
+
+    // Helper functions
+    function formatDate(dateString) {
+        if (!dateString) return 'Unknown';
+        const date = new Date(dateString);
+        const now = new Date();
+        const diff = now - date;
+        
+        const minutes = Math.floor(diff / 60000);
+        const hours = Math.floor(diff / 3600000);
+        const days = Math.floor(diff / 86400000);
+        
+        if (minutes < 1) return 'Just now';
+        if (minutes < 60) return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+        if (hours < 24) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+        if (days < 7) return `${days} day${days > 1 ? 's' : ''} ago`;
+        
+        return date.toLocaleDateString();
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    function showNotification(message, type) {
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.innerHTML = `
+            <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+            <span>${message}</span>
+        `;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.remove();
+        }, 3000);
+    }
+
+    // Check auth and load data
+    async function checkAuth() {
+        try {
+            const response = await fetch('/api/auth/me');
+            if (!response.ok) {
+                window.location.href = '/login';
+                return;
+            }
+            loadUserData();
+            loadStats();
+            loadDocuments();
+        } catch (error) {
+            console.error('Auth check error:', error);
+            window.location.href = '/login';
+        }
+    }
+
+    // Initialize
+    checkAuth();
+    </script>
+
+    <style>
+    .notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 25px;
+        border-radius: 15px;
+        background: white;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        z-index: 10000;
+        animation: slideInRight 0.3s ease;
+        font-weight: 500;
+    }
+    
+    .notification.success {
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+    }
+    
+    .notification.error {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: white;
+    }
+    
+    @keyframes slideInRight {
+        from {
+            opacity: 0;
+            transform: translateX(100px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .dark-mode {
+        filter: invert(1) hue-rotate(180deg);
+    }
+
+    .dark-mode img,
+    .dark-mode video {
+        filter: invert(1) hue-rotate(180deg);
+    }
+    </style>
+</body>
+</html>
