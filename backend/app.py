@@ -14,10 +14,10 @@ from datetime import datetime, timedelta
 load_dotenv()
 
 # Import services
-from services.document_processor import DocumentProcessor
-from services.embedding_service import EmbeddingService
-from services.vector_store import VectorStore
-from services.groq_service import GroqService
+from .services.document_processor import DocumentProcessor
+from .services.embedding_service import EmbeddingService
+from .services.vector_store import VectorStore
+from .services.groq_service import GroqService
 
 app = Flask(__name__)
 
