@@ -26,6 +26,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY backend/ ./backend/
 COPY frontend/ ./frontend/
 
+# DEBUG: List the backend directory to verify files
+RUN ls -la /app/backend/
+RUN ls -la /app/backend/services/ || echo "Services directory not found!"
+
 # Create necessary directories
 RUN mkdir -p uploads vector_store database
 
