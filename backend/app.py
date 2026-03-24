@@ -721,7 +721,7 @@ def handle_chat():
         return jsonify({'error': str(e)}), 500
 
 # ============================================
-# HEALTH ENDPOINT
+# HEALTH ENDPOINTS
 # ============================================
 
 @app.route('/api/health', methods=['GET', 'OPTIONS'])
@@ -750,6 +750,20 @@ def handle_health():
     response.headers.add('Access-Control-Allow-Origin', request.headers.get('Origin', '*'))
     response.headers.add('Access-Control-Allow-Credentials', 'true')
     return response, 200
+
+# ============================================
+# SIMPLE HEALTH CHECK (for Render)
+# ============================================
+
+@app.route('/healthz')
+def healthz():
+    """Simple health check for Render - returns 200 if app is running"""
+    return jsonify({
+        'status': 'healthy',
+        'timestamp': time.time(),
+        'database': os.path.exists(DATABASE_PATH),
+        'session': bool(session.get('user_id'))
+    }), 200
 
 # ============================================
 # DEBUG ROUTES
@@ -810,10 +824,16 @@ def handle_internal_error(error):
 # ============================================
 
 if __name__ == '__main__':
+    # Get port from environment variable (Render) or use default 5000
+    port = int(os.environ.get('PORT', 5000))
+    
     print("\n" + "=" * 60)
-    print("🌐 SERVER RUNNING AT http://localhost:5000")
+    print(f"🌐 SERVER RUNNING AT http://localhost:{port}")
     print("=" * 60)
-    print("✅ Ready for local development!")
+    print("✅ Ready for development!")
     print("=" * 60 + "\n")
     
-    app.run(debug=True, port=5000, host='0.0.0.0')
+    # Disable debug mode on Render to prevent auto-reload loops
+    debug_mode = not IS_RENDER
+    
+    app.run(debug=debug_mode, port=port, host='0.0.0.0')
