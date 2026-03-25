@@ -26,15 +26,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY backend/ ./backend/
 COPY frontend/ ./frontend/
 
-# DEBUG: List the backend directory to verify files
-RUN ls -la /app/backend/
-RUN ls -la /app/backend/services/ || echo "Services directory not found!"
-
 # Create necessary directories
 RUN mkdir -p uploads vector_store database
 
 # Expose the port
-EXPOSE 5000
+EXPOSE 10000
 
-# Run the application with gunicorn
-CMD ["gunicorn", "--workers=1", "--threads=2", "--timeout=300", "--bind=0.0.0.0:$PORT", "backend.app:app"]
+# Run the application with gunicorn - use shell form for $PORT expansion
+CMD gunicorn --workers=1 --threads=2 --timeout=300 --bind=0.0.0.0:$PORT backend.app:app
