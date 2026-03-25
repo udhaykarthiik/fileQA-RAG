@@ -833,7 +833,13 @@ if __name__ == '__main__':
     print("✅ Ready for development!")
     print("=" * 60 + "\n")
     
-    # Disable debug mode on Render to prevent auto-reload loops
-    debug_mode = not IS_RENDER
+    # FORCE disable debug mode on Render
+    # Check if running on Render
+    is_render = os.environ.get('RENDER', False)
     
-    app.run(debug=debug_mode, port=port, host='0.0.0.0')
+    if is_render:
+        # On Render: NO debug mode, NO auto-reload
+        app.run(debug=False, port=port, host='0.0.0.0', use_reloader=False)
+    else:
+        # Locally: debug mode enabled
+        app.run(debug=True, port=port, host='0.0.0.0')

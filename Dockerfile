@@ -37,4 +37,4 @@ RUN mkdir -p uploads vector_store database
 EXPOSE 5000
 
 # Run the application with gunicorn
-CMD ["gunicorn", "--workers=1", "--threads=2", "--timeout=300", "--bind=0.0.0.0:5000", "backend.app:app"]
+CMD ["gunicorn", "--workers=1", "--threads=2", "--timeout=300", "--bind=0.0.0.0:$PORT", "backend.app:app"]

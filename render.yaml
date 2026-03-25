@@ -1,16 +1,16 @@
 services:
   - type: web
     name: fileqa-rag-chatbot
-    runtime: python
-    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
-    startCommand: gunicorn --workers=2 --threads=2 --timeout=300 --bind=0.0.0.0:$PORT backend.app:app
+    runtime: docker
+    repo: https://github.com/udhaykarthiik/fileQA-RAG
+    plan: free
+    healthCheckPath: /healthz
     envVars:
-      - key: PYTHON_VERSION
-        value: 3.11.0
       - key: GROQ_API_KEY
         sync: false
       - key: SECRET_KEY
         generateValue: true
       - key: RENDER
         value: true
-    plan: free
+      - key: PYTHONUNBUFFERED
+        value: "1"
