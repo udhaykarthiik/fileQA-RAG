@@ -22,7 +22,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Pre-download the embedding model during build so it doesn't happen at runtime
 # This keeps startup fast and avoids network calls on Render
-RUN python -c "from fastembed import TextEmbedding; list(TextEmbedding('sentence-transformers/paraphrase-MiniLM-L3-v2').embed(['warmup']))"
+RUN python -c "from fastembed import TextEmbedding; list(TextEmbedding('BAAI/bge-small-en-v1.5').embed(['warmup']))"
 
 COPY backend/ ./backend/
 COPY frontend/ ./frontend/

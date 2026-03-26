@@ -5,7 +5,7 @@ from typing import List, Dict, Any
 class EmbeddingService:
     """Handles text embedding generation using fastembed (no torch dependency)"""
 
-    def __init__(self, model_name='sentence-transformers/paraphrase-MiniLM-L3-v2'):
+    def __init__(self, model_name='BAAI/bge-small-en-v1.5'):
         """Initialize the embedding model"""
         print(f"🔄 Loading embedding model: {model_name}...")
         self.model = TextEmbedding(model_name=model_name)
