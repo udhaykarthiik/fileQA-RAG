@@ -1,36 +1,46 @@
-# Use Python 3.11 official image
 FROM python:3.11-slim
 
-# Set working directory
 WORKDIR /app
 
-# Set environment variables
+# Memory + Python optimizations
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 ENV RENDER=true
+ENV OMP_NUM_THREADS=1
+ENV MKL_NUM_THREADS=1
+ENV NUMEXPR_NUM_THREADS=1
+# fastembed downloads models to this cache dir at first run
+ENV FASTEMBED_CACHE_PATH=/tmp/fastembed_cache
 
-# Install system dependencies needed for Python packages
+# Only gcc needed — no extra bloat
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
-    g++ \
-    make \
-    python3-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements and install Python dependencies
 COPY requirements.txt .
-RUN pip install --upgrade pip setuptools wheel
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the application
+# Pre-download the embedding model during build so it doesn't happen at runtime
+# This keeps startup fast and avoids network calls on Render
+RUN python -c "from fastembed import TextEmbedding; list(TextEmbedding('sentence-transformers/paraphrase-MiniLM-L3-v2').embed(['warmup']))"
+
 COPY backend/ ./backend/
 COPY frontend/ ./frontend/
 
-# Create necessary directories
-RUN mkdir -p uploads vector_store database
+RUN mkdir -p /tmp/uploads /tmp/vector_store /tmp/fastembed_cache
 
-# Expose the port
 EXPOSE 10000
 
-# Run the application with gunicorn - use shell form for $PORT expansion
-CMD gunicorn --workers=1 --threads=2 --timeout=300 --bind=0.0.0.0:$PORT backend.app:app
+# Changes from original:
+# - Removed --max-requests (was causing intentional restarts every 100 requests)
+# - Added --preload (loads app once before forking, saves RAM)
+# - Increased --threads 1->2 (handles concurrent requests without extra workers)
+# - Reduced --timeout 600->120 (600s masked hung workers)
+CMD gunicorn \
+    --workers=1 \
+    --threads=2 \
+    --timeout=120 \
+    --keep-alive=5 \
+    --preload \
+    --bind=0.0.0.0:10000 \
+    backend.app:app

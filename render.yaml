@@ -5,13 +5,16 @@ services:
     repo: https://github.com/udhaykarthiik/fileQA-RAG
     plan: free
     healthCheckPath: /healthz
-    healthCheckTimeout: 300
     envVars:
       - key: GROQ_API_KEY
         sync: false
       - key: SECRET_KEY
         generateValue: true
       - key: RENDER
-        value: true
+        value: "true"
       - key: PYTHONUNBUFFERED
         value: "1"
+      - key: PORT
+        value: "10000"
+      - key: FASTEMBED_CACHE_PATH
+        value: "/tmp/fastembed_cache"
