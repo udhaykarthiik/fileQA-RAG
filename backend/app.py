@@ -1,27 +1,15 @@
 import os
 import sys
-import gc
-import uuid
-import time
-import sqlite3
-import bcrypt
-from datetime import datetime, timedelta
-from functools import wraps
 from flask import Flask, send_from_directory, jsonify, request, session, redirect, url_for
 from flask_cors import CORS
 from dotenv import load_dotenv
+import uuid
 from werkzeug.utils import secure_filename
-
-# ============================================
-# MEMORY OPTIMIZATION - MUST BE AT THE TOP
-# ============================================
-# Set environment variables for memory optimization
-os.environ['OMP_NUM_THREADS'] = '1'
-os.environ['MKL_NUM_THREADS'] = '1'
-os.environ['NUMEXPR_NUM_THREADS'] = '1'
-
-# Force garbage collection on startup
-gc.collect()
+import time
+import sqlite3
+import bcrypt
+from functools import wraps
+from datetime import datetime, timedelta
 
 # Load environment variables
 load_dotenv()
