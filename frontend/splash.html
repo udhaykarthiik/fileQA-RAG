@@ -7,12 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
@@ -20,324 +15,150 @@
             overflow: hidden;
             position: relative;
         }
-
-        /* Particle Background */
-        .particle-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            overflow: hidden;
-        }
-
-        .particle {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            pointer-events: none;
-            animation: float-particle 15s infinite linear;
-        }
-
+        .particle-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; overflow: hidden; }
+        .particle { position: absolute; background: rgba(255,255,255,0.3); border-radius: 50%; pointer-events: none; animation: float-particle 15s infinite linear; }
         @keyframes float-particle {
-            from {
-                transform: translateY(100vh) translateX(-10vw);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(-100vh) translateX(10vw);
-                opacity: 0.8;
-            }
+            from { transform: translateY(100vh) translateX(-10vw); opacity: 0; }
+            to   { transform: translateY(-100vh) translateX(10vw); opacity: 0.8; }
         }
-
         .grid-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                linear-gradient(rgba(240, 147, 251, 0.1) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(240, 147, 251, 0.1) 1px, transparent 1px);
-            background-size: 50px 50px;
-            pointer-events: none;
-            z-index: 1;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(rgba(240,147,251,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(240,147,251,0.1) 1px, transparent 1px);
+            background-size: 50px 50px; pointer-events: none; z-index: 1;
         }
-
-        /* Splash Screen */
         .splash-screen {
-            position: relative;
-            z-index: 2;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            position: relative; z-index: 2; min-height: 100vh;
+            display: flex; align-items: center; justify-content: center;
             animation: fadeIn 1s ease;
         }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .splash-content {
-            text-align: center;
-            animation: scaleIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
-
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .splash-content { text-align: center; animation: scaleIn 0.8s cubic-bezier(0.68,-0.55,0.265,1.55); }
         @keyframes scaleIn {
-            from {
-                opacity: 0;
-                transform: scale(0.8);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
+            from { opacity: 0; transform: scale(0.8); }
+            to   { opacity: 1; transform: scale(1); }
         }
-
-        /* Logo Animation */
-        .logo-container {
-            margin-bottom: 40px;
-            position: relative;
-        }
-
         .logo-main {
-            font-size: 80px;
-            font-weight: 800;
+            font-size: 80px; font-weight: 800;
             background: linear-gradient(135deg, #fff 0%, #ffe0f0 50%, #f093fb 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
             margin-bottom: 10px;
-            animation: glow 2s ease-in-out infinite;
         }
-
-        @keyframes glow {
-            0%, 100% { text-shadow: 0 0 20px rgba(240, 147, 251, 0.5); }
-            50% { text-shadow: 0 0 40px rgba(240, 147, 251, 0.8); }
-        }
-
         .logo-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, #f093fb, #f5576c);
-            padding: 5px 15px;
-            border-radius: 30px;
-            font-size: 14px;
-            font-weight: 600;
-            color: white;
-            margin-left: 10px;
-            animation: pulse 2s ease-in-out infinite;
+            display: inline-block; background: linear-gradient(135deg, #f093fb, #f5576c);
+            padding: 5px 15px; border-radius: 30px; font-size: 14px; font-weight: 600;
+            color: white; margin-left: 10px; animation: pulse 2s ease-in-out infinite;
         }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.9; }
-        }
-
-        /* Tagline */
-        .tagline {
-            font-size: 24px;
-            color: white;
-            margin-bottom: 20px;
-            font-weight: 500;
-            letter-spacing: -0.02em;
-        }
-
-        .subtagline {
-            font-size: 16px;
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 40px;
-        }
-
-        /* Loading Animation */
-        .loading-container {
-            margin: 40px auto;
-            width: 200px;
-        }
-
-        .loading-bar {
-            width: 100%;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 4px;
-            overflow: hidden;
-            position: relative;
-        }
-
+        @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        .tagline    { font-size: 24px; color: white; margin-bottom: 20px; font-weight: 500; }
+        .subtagline { font-size: 16px; color: rgba(255,255,255,0.8); margin-bottom: 40px; }
+        .loading-container { margin: 40px auto; width: 200px; }
+        .loading-bar { width: 100%; height: 4px; background: rgba(255,255,255,0.2); border-radius: 4px; overflow: hidden; position: relative; }
         .loading-progress {
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
+            position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
             background: linear-gradient(90deg, #f093fb, #f5576c);
             animation: loading 2s ease infinite;
         }
-
-        @keyframes loading {
-            0% { left: -100%; }
-            50% { left: 0; }
-            100% { left: 100%; }
-        }
-
-        .loading-text {
-            text-align: center;
-            margin-top: 15px;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 14px;
-            letter-spacing: 1px;
-        }
-
-        /* Loading Dots Animation */
-        .loading-dots {
-            display: inline-flex;
-            gap: 4px;
-        }
-
-        .loading-dots span {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.7);
-            animation: bounce 1.4s infinite;
-        }
-
+        @keyframes loading { 0% { left: -100%; } 50% { left: 0; } 100% { left: 100%; } }
+        .loading-text { text-align: center; margin-top: 15px; color: rgba(255,255,255,0.7); font-size: 14px; letter-spacing: 1px; }
+        .loading-dots { display: inline-flex; gap: 4px; }
+        .loading-dots span { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.7); animation: bounce 1.4s infinite; }
         .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
         .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
-
-        @keyframes bounce {
-            0%, 60%, 100% { transform: translateY(0); }
-            30% { transform: translateY(-10px); }
-        }
-
-        /* Version */
-        .version {
-            position: absolute;
-            bottom: 20px;
-            left: 0;
-            right: 0;
-            text-align: center;
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 12px;
-            z-index: 2;
-        }
-
-        /* Animated Circle */
+        @keyframes bounce { 0%,60%,100% { transform: translateY(0); } 30% { transform: translateY(-10px); } }
+        .version { position: absolute; bottom: 20px; left: 0; right: 0; text-align: center; color: rgba(255,255,255,0.5); font-size: 12px; z-index: 2; }
         .circle-ring {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 300px;
-            height: 300px;
-            border-radius: 50%;
-            border: 2px solid rgba(240, 147, 251, 0.3);
-            animation: expand 2s ease-out infinite;
-            z-index: 1;
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+            width: 300px; height: 300px; border-radius: 50%;
+            border: 2px solid rgba(240,147,251,0.3);
+            animation: expand 2s ease-out infinite; z-index: 1;
         }
-
+        .circle-ring-delay { animation: expand 2s ease-out infinite 1s; }
         @keyframes expand {
-            0% {
-                width: 200px;
-                height: 200px;
-                opacity: 0.5;
-            }
-            100% {
-                width: 400px;
-                height: 400px;
-                opacity: 0;
-            }
+            0%   { width: 200px; height: 200px; opacity: 0.5; }
+            100% { width: 400px; height: 400px; opacity: 0; }
         }
-
-        .circle-ring-delay {
-            animation: expand 2s ease-out infinite 1s;
-        }
+        .status-msg { color: rgba(255,255,255,0.6); font-size: 13px; margin-top: 10px; min-height: 20px; }
     </style>
 </head>
 <body>
     <div class="particle-bg" id="particleBg"></div>
     <div class="grid-overlay"></div>
-    
     <div class="circle-ring"></div>
     <div class="circle-ring circle-ring-delay"></div>
 
     <div class="splash-screen">
         <div class="splash-content">
             <div class="logo-container">
-                <div class="logo-main">
-                    RAG Flow
-                    <span class="logo-badge">AI</span>
-                </div>
+                <div class="logo-main">RAG Flow <span class="logo-badge">AI</span></div>
             </div>
-            
             <div class="tagline">Your Intelligent Document Assistant</div>
             <div class="subtagline">Powered by Groq AI • RAG Technology</div>
-            
             <div class="loading-container">
-                <div class="loading-bar">
-                    <div class="loading-progress"></div>
-                </div>
+                <div class="loading-bar"><div class="loading-progress"></div></div>
                 <div class="loading-text">
-                    Loading amazing features
-                    <div class="loading-dots">
-                        <span>.</span><span>.</span><span>.</span>
-                    </div>
+                    Loading
+                    <div class="loading-dots"><span>.</span><span>.</span><span>.</span></div>
                 </div>
             </div>
+            <div class="status-msg" id="statusMsg"></div>
         </div>
     </div>
-
     <div class="version">v2.0 • RAG Powered</div>
 
     <script>
-        // Create floating particles
         function createParticles() {
             const container = document.getElementById('particleBg');
             for (let i = 0; i < 150; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.top = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 20 + 's';
-                particle.style.animationDuration = (15 + Math.random() * 20) + 's';
-                particle.style.width = (2 + Math.random() * 6) + 'px';
-                particle.style.height = particle.style.width;
-                particle.style.background = `rgba(${155 + Math.random() * 100}, ${100 + Math.random() * 100}, ${200 + Math.random() * 55}, ${0.3 + Math.random() * 0.5})`;
-                container.appendChild(particle);
+                const p = document.createElement('div');
+                p.className = 'particle';
+                p.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;animation-delay:${Math.random()*20}s;animation-duration:${15+Math.random()*20}s;width:${2+Math.random()*6}px;height:${2+Math.random()*6}px;background:rgba(${155+Math.random()*100},${100+Math.random()*100},${200+Math.random()*55},${0.3+Math.random()*0.5})`;
+                container.appendChild(p);
             }
         }
         createParticles();
 
-        // Check authentication and redirect after splash
         async function checkAuthAndRedirect() {
-            // Show splash for 2 seconds minimum
-            await new Promise(resolve => setTimeout(resolve, 2500));
-            
+            // Minimum splash display time
+            await new Promise(r => setTimeout(r, 2500));
+
+            const statusMsg = document.getElementById('statusMsg');
+
             try {
-                const response = await fetch('/api/auth/me');
-                
+                // Use a timeout so Render cold starts don't hang forever
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 8000); // 8s timeout
+
+                const response = await fetch('/api/auth/me', {
+                    credentials: 'include',
+                    signal: controller.signal
+                });
+                clearTimeout(timeoutId);
+
                 if (response.ok) {
                     const data = await response.json();
                     if (data.user) {
-                        // User is logged in, go to dashboard
                         window.location.href = '/dashboard';
                     } else {
-                        // Not logged in, go to login
-                        window.location.href = '/login';
+                        window.location.href = '/home';
                     }
                 } else {
-                    // Not authenticated, go to login
-                    window.location.href = '/login';
+                    // 401 = not logged in, go to home (not login — let user choose)
+                    window.location.href = '/home';
                 }
             } catch (error) {
-                console.error('Auth check error:', error);
-                window.location.href = '/login';
+                if (error.name === 'AbortError') {
+                    // Server took too long (cold start) — go to home, don't redirect to login
+                    statusMsg.textContent = 'Server warming up...';
+                    await new Promise(r => setTimeout(r, 2000));
+                    window.location.href = '/home';
+                } else {
+                    // Network error — go to home, not login
+                    // NEVER redirect to /login on network error — causes reload loops
+                    window.location.href = '/home';
+                }
             }
         }
 
-        // Start the redirect process
         checkAuthAndRedirect();
     </script>
 </body>

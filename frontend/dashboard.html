@@ -77,59 +77,36 @@
             <!-- Stats Cards -->
             <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-file-alt"></i>
-                    </div>
+                    <div class="stat-icon"><i class="fas fa-file-alt"></i></div>
                     <div class="stat-info">
                         <h3>Total Documents</h3>
                         <p class="stat-number" id="totalDocuments">0</p>
                     </div>
-                    <div class="stat-trend">
-                        <i class="fas fa-chart-line"></i>
-                        <span>All time</span>
-                    </div>
+                    <div class="stat-trend"><i class="fas fa-chart-line"></i><span>All time</span></div>
                 </div>
-
                 <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-puzzle-piece"></i>
-                    </div>
+                    <div class="stat-icon"><i class="fas fa-puzzle-piece"></i></div>
                     <div class="stat-info">
                         <h3>Total Chunks</h3>
                         <p class="stat-number" id="totalChunks">0</p>
                     </div>
-                    <div class="stat-trend">
-                        <i class="fas fa-database"></i>
-                        <span>Processed</span>
-                    </div>
+                    <div class="stat-trend"><i class="fas fa-database"></i><span>Processed</span></div>
                 </div>
-
                 <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-brain"></i>
-                    </div>
+                    <div class="stat-icon"><i class="fas fa-brain"></i></div>
                     <div class="stat-info">
                         <h3>Questions Asked</h3>
                         <p class="stat-number" id="totalQuestions">0</p>
                     </div>
-                    <div class="stat-trend">
-                        <i class="fas fa-chat"></i>
-                        <span>Lifetime</span>
-                    </div>
+                    <div class="stat-trend"><i class="fas fa-comments"></i><span>Lifetime</span></div>
                 </div>
-
                 <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
+                    <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
                     <div class="stat-info">
                         <h3>Accuracy Rate</h3>
                         <p class="stat-number">99<span style="font-size: 24px;">%</span></p>
                     </div>
-                    <div class="stat-trend">
-                        <i class="fas fa-star"></i>
-                        <span>AI Powered</span>
-                    </div>
+                    <div class="stat-trend"><i class="fas fa-star"></i><span>AI Powered</span></div>
                 </div>
             </div>
 
@@ -141,7 +118,6 @@
                         <i class="fas fa-sync-alt"></i>
                     </button>
                 </div>
-                
                 <div class="documents-grid" id="documentsGrid">
                     <div class="loading-state">
                         <i class="fas fa-spinner fa-spin"></i>
@@ -175,191 +151,190 @@
     </div>
 
     <script>
-    // Create floating particles
+    // ─── Particles ───────────────────────────────────────────────────────────────
     function createParticles() {
         const container = document.getElementById('particleBg');
         if (!container) return;
         for (let i = 0; i < 100; i++) {
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-            particle.style.left = Math.random() * 100 + '%';
-            particle.style.top = Math.random() * 100 + '%';
-            particle.style.animationDelay = Math.random() * 20 + 's';
-            particle.style.animationDuration = (15 + Math.random() * 20) + 's';
-            particle.style.width = (1 + Math.random() * 5) + 'px';
-            particle.style.height = particle.style.width;
-            particle.style.background = `rgba(${155 + Math.random() * 100}, ${100 + Math.random() * 100}, ${200 + Math.random() * 55}, ${0.3 + Math.random() * 0.5})`;
-            container.appendChild(particle);
+            const p = document.createElement('div');
+            p.className = 'particle';
+            p.style.cssText = `
+                left:${Math.random()*100}%;
+                top:${Math.random()*100}%;
+                animation-delay:${Math.random()*20}s;
+                animation-duration:${15+Math.random()*20}s;
+                width:${1+Math.random()*5}px;
+                height:${1+Math.random()*5}px;
+                background:rgba(${155+Math.random()*100},${100+Math.random()*100},${200+Math.random()*55},${0.3+Math.random()*0.5});
+            `;
+            container.appendChild(p);
         }
     }
     createParticles();
 
-    // Theme toggle
+    // ─── Theme ───────────────────────────────────────────────────────────────────
     function toggleTheme() {
         document.body.classList.toggle('dark-mode');
-        const btn = document.querySelector('.theme-toggle i');
-        if (document.body.classList.contains('dark-mode')) {
-            btn.className = 'fas fa-sun';
-        } else {
-            btn.className = 'fas fa-moon';
-        }
+        document.querySelector('.theme-toggle i').className =
+            document.body.classList.contains('dark-mode') ? 'fas fa-sun' : 'fas fa-moon';
     }
 
-    // Logout function
+    // ─── Logout ──────────────────────────────────────────────────────────────────
     async function logout() {
         try {
-            await fetch('/api/auth/logout', { method: 'POST' });
-            window.location.href = '/';
-        } catch (error) {
-            console.error('Logout error:', error);
-            window.location.href = '/';
-        }
+            await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+        } catch (e) { /* ignore */ }
+        window.location.href = '/';
     }
 
-    // Load user data and dashboard stats
-    async function loadUserData() {
+    // ─── Auth + data load (single /api/auth/me call) ─────────────────────────────
+    async function init() {
         try {
-            const response = await fetch('/api/auth/me');
-            if (response.ok) {
-                const data = await response.json();
-                if (data.user) {
-                    document.getElementById('userName').textContent = data.user.username || data.user.full_name;
-                    document.getElementById('userEmail').textContent = data.user.email;
-                    document.getElementById('welcomeName').textContent = data.user.full_name || data.user.username;
-                }
-            } else {
+            const response = await fetch('/api/auth/me', { credentials: 'include' });
+
+            // Not logged in → go to login (only redirect here, nowhere else)
+            if (!response.ok) {
                 window.location.href = '/login';
+                return;
             }
+
+            const data = await response.json();
+            const user = data.user;
+
+            // Populate user info
+            document.getElementById('userName').textContent    = user.username  || user.full_name || '';
+            document.getElementById('userEmail').textContent   = user.email     || '';
+            document.getElementById('welcomeName').textContent = user.full_name || user.username  || 'User';
+
+            // Load the rest in parallel — errors here do NOT redirect
+            loadStats();
+            loadDocuments();
+
         } catch (error) {
-            console.error('Error loading user:', error);
-            window.location.href = '/login';
+            // Network error — don't redirect, just log it
+            // Redirecting on network error causes the reload loop on slow connections
+            console.error('Init error:', error);
+            document.getElementById('userName').textContent  = 'Error loading';
+            document.getElementById('userEmail').textContent = 'Please refresh';
         }
     }
 
-    // Load dashboard stats
+    // ─── Stats ───────────────────────────────────────────────────────────────────
     async function loadStats() {
         try {
-            const response = await fetch('/api/dashboard/stats');
-            if (response.ok) {
-                const data = await response.json();
-                document.getElementById('totalDocuments').textContent = data.total_documents || 0;
-                document.getElementById('totalChunks').textContent = data.total_chunks || 0;
-                document.getElementById('totalQuestions').textContent = Math.floor(data.total_chunks * 1.5) || 0;
-            }
+            const response = await fetch('/api/dashboard/stats', { credentials: 'include' });
+            if (!response.ok) return; // silently fail, don't redirect
+            const data = await response.json();
+            document.getElementById('totalDocuments').textContent = data.total_documents || 0;
+            document.getElementById('totalChunks').textContent    = data.total_chunks    || 0;
+            document.getElementById('totalQuestions').textContent = Math.floor((data.total_chunks || 0) * 1.5);
         } catch (error) {
-            console.error('Error loading stats:', error);
+            console.error('Stats error:', error);
         }
     }
 
-    // Load user documents
+    // ─── Documents ───────────────────────────────────────────────────────────────
     async function loadDocuments() {
         const grid = document.getElementById('documentsGrid');
         grid.innerHTML = '<div class="loading-state"><i class="fas fa-spinner fa-spin"></i><p>Loading your documents...</p></div>';
-        
+
         try {
-            const response = await fetch('/api/dashboard/documents');
-            if (response.ok) {
-                const data = await response.json();
-                const documents = data.documents || [];
-                
-                if (documents.length === 0) {
-                    grid.innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-folder-open"></i>
-                            <h3>No documents yet</h3>
-                            <p>Upload your first document to get started</p>
-                            <button class="primary-btn" onclick="window.location.href='/home'">
-                                <i class="fas fa-upload"></i> Upload Document
-                            </button>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                grid.innerHTML = documents.map(doc => `
-                    <div class="document-card" data-file-id="${doc.file_id}">
-                        <div class="document-icon">
-                            <i class="fas fa-file-pdf"></i>
-                        </div>
-                        <div class="document-info">
-                            <h4>${escapeHtml(doc.filename)}</h4>
-                            <div class="document-meta">
-                                <span><i class="fas fa-calendar"></i> ${formatDate(doc.uploaded_at)}</span>
-                                <span><i class="fas fa-puzzle-piece"></i> ${doc.chunks || 0} chunks</span>
-                            </div>
-                        </div>
-                        <div class="document-actions">
-                            <button class="action-btn chat-btn" onclick="chatWithDocument('${doc.file_id}', '${escapeHtml(doc.filename)}')" title="Chat with this document">
-                                <i class="fas fa-comment-dots"></i>
-                            </button>
-                            <button class="action-btn delete-btn" onclick="deleteDocument('${doc.file_id}')" title="Delete document">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
+            const response = await fetch('/api/dashboard/documents', { credentials: 'include' });
+            if (!response.ok) {
+                grid.innerHTML = '<div class="error-state"><i class="fas fa-exclamation-circle"></i><p>Could not load documents</p></div>';
+                return;
+            }
+
+            const data = await response.json();
+            const documents = data.documents || [];
+
+            if (documents.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-folder-open"></i>
+                        <h3>No documents yet</h3>
+                        <p>Upload your first document to get started</p>
+                        <button class="primary-btn" onclick="window.location.href='/home'">
+                            <i class="fas fa-upload"></i> Upload Document
+                        </button>
+                    </div>`;
+                return;
+            }
+
+            grid.innerHTML = documents.map(doc => `
+                <div class="document-card" data-file-id="${doc.file_id}">
+                    <div class="document-icon"><i class="fas fa-file-pdf"></i></div>
+                    <div class="document-info">
+                        <h4>${escapeHtml(doc.filename)}</h4>
+                        <div class="document-meta">
+                            <span><i class="fas fa-calendar"></i> ${formatDate(doc.uploaded_at)}</span>
+                            <span><i class="fas fa-puzzle-piece"></i> ${doc.chunks || 0} chunks</span>
                         </div>
                     </div>
-                `).join('');
-            }
+                    <div class="document-actions">
+                        <button class="action-btn chat-btn"
+                            onclick="chatWithDocument('${doc.file_id}','${escapeHtml(doc.filename)}')"
+                            title="Chat with this document">
+                            <i class="fas fa-comment-dots"></i>
+                        </button>
+                        <button class="action-btn delete-btn"
+                            onclick="deleteDocument('${doc.file_id}')"
+                            title="Delete document">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                </div>`).join('');
+
         } catch (error) {
-            console.error('Error loading documents:', error);
+            console.error('Documents error:', error);
             grid.innerHTML = `
                 <div class="error-state">
                     <i class="fas fa-exclamation-circle"></i>
                     <h3>Failed to load documents</h3>
-                    <p>Please try again later</p>
                     <button class="secondary-btn" onclick="loadDocuments()">Retry</button>
-                </div>
-            `;
+                </div>`;
         }
     }
 
-    // Chat with document
+    // ─── Document actions ────────────────────────────────────────────────────────
     function chatWithDocument(fileId, filename) {
         sessionStorage.setItem('currentFileId', fileId);
         sessionStorage.setItem('currentFilename', filename);
         window.location.href = '/chat';
     }
 
-    // Delete document
     async function deleteDocument(fileId) {
-        if (!confirm('Are you sure you want to delete this document? This action cannot be undone.')) {
-            return;
-        }
-        
+        if (!confirm('Delete this document? This cannot be undone.')) return;
         try {
             const response = await fetch(`/api/dashboard/document/${fileId}`, {
-                method: 'DELETE'
+                method: 'DELETE',
+                credentials: 'include'
             });
-            
             if (response.ok) {
-                showNotification('Document deleted successfully', 'success');
+                showNotification('Document deleted', 'success');
                 loadDocuments();
                 loadStats();
             } else {
                 const data = await response.json();
-                showNotification(data.error || 'Failed to delete document', 'error');
+                showNotification(data.error || 'Failed to delete', 'error');
             }
         } catch (error) {
-            console.error('Error deleting document:', error);
             showNotification('Network error. Please try again.', 'error');
         }
     }
 
-    // Helper functions
+    // ─── Helpers ─────────────────────────────────────────────────────────────────
     function formatDate(dateString) {
         if (!dateString) return 'Unknown';
         const date = new Date(dateString);
-        const now = new Date();
-        const diff = now - date;
-        
+        const diff = Date.now() - date;
         const minutes = Math.floor(diff / 60000);
-        const hours = Math.floor(diff / 3600000);
-        const days = Math.floor(diff / 86400000);
-        
-        if (minutes < 1) return 'Just now';
-        if (minutes < 60) return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
-        if (hours < 24) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
-        if (days < 7) return `${days} day${days > 1 ? 's' : ''} ago`;
-        
+        const hours   = Math.floor(diff / 3600000);
+        const days    = Math.floor(diff / 86400000);
+        if (minutes < 1)  return 'Just now';
+        if (minutes < 60) return `${minutes}m ago`;
+        if (hours   < 24) return `${hours}h ago`;
+        if (days    <  7) return `${days}d ago`;
         return date.toLocaleDateString();
     }
 
@@ -370,86 +345,33 @@
     }
 
     function showNotification(message, type) {
-        const notification = document.createElement('div');
-        notification.className = `notification ${type}`;
-        notification.innerHTML = `
-            <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
-            <span>${message}</span>
-        `;
-        document.body.appendChild(notification);
-        
-        setTimeout(() => {
-            notification.remove();
-        }, 3000);
+        const n = document.createElement('div');
+        n.className = `notification ${type}`;
+        n.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i><span>${message}</span>`;
+        document.body.appendChild(n);
+        setTimeout(() => n.remove(), 3000);
     }
 
-    // Check auth and load data
-    async function checkAuth() {
-        try {
-            const response = await fetch('/api/auth/me');
-            if (!response.ok) {
-                window.location.href = '/login';
-                return;
-            }
-            loadUserData();
-            loadStats();
-            loadDocuments();
-        } catch (error) {
-            console.error('Auth check error:', error);
-            window.location.href = '/login';
-        }
-    }
-
-    // Initialize
-    checkAuth();
+    // ─── Boot ────────────────────────────────────────────────────────────────────
+    init();
     </script>
 
     <style>
     .notification {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        padding: 15px 25px;
-        border-radius: 15px;
-        background: white;
+        position: fixed; top: 20px; right: 20px;
+        padding: 15px 25px; border-radius: 15px; background: white;
         box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        z-index: 10000;
-        animation: slideInRight 0.3s ease;
-        font-weight: 500;
+        display: flex; align-items: center; gap: 12px;
+        z-index: 10000; animation: slideInRight 0.3s ease; font-weight: 500;
     }
-    
-    .notification.success {
-        background: linear-gradient(135deg, #10b981, #059669);
-        color: white;
-    }
-    
-    .notification.error {
-        background: linear-gradient(135deg, #ef4444, #dc2626);
-        color: white;
-    }
-    
+    .notification.success { background: linear-gradient(135deg,#10b981,#059669); color: white; }
+    .notification.error   { background: linear-gradient(135deg,#ef4444,#dc2626); color: white; }
     @keyframes slideInRight {
-        from {
-            opacity: 0;
-            transform: translateX(100px);
-        }
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
+        from { opacity:0; transform:translateX(100px); }
+        to   { opacity:1; transform:translateX(0); }
     }
-
-    .dark-mode {
-        filter: invert(1) hue-rotate(180deg);
-    }
-
-    .dark-mode img,
-    .dark-mode video {
-        filter: invert(1) hue-rotate(180deg);
-    }
+    .dark-mode { filter: invert(1) hue-rotate(180deg); }
+    .dark-mode img, .dark-mode video { filter: invert(1) hue-rotate(180deg); }
     </style>
 </body>
 </html>

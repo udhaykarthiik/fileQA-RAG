@@ -11,7 +11,6 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔐</text></svg>">
 </head>
 <body>
-    <!-- Animated Particle Background -->
     <div class="particle-bg" id="particleBg"></div>
     <div class="grid-overlay"></div>
 
@@ -28,34 +27,16 @@
 
             <form id="loginForm" class="auth-form">
                 <div class="input-group">
-                    <div class="input-icon">
-                        <i class="fas fa-envelope"></i>
-                    </div>
-                    <input 
-                        type="email" 
-                        id="email" 
-                        placeholder="Email address" 
-                        required
-                        autocomplete="email"
-                    >
+                    <div class="input-icon"><i class="fas fa-envelope"></i></div>
+                    <input type="email" id="email" placeholder="Email address" required autocomplete="email">
                 </div>
-
                 <div class="input-group">
-                    <div class="input-icon">
-                        <i class="fas fa-lock"></i>
-                    </div>
-                    <input 
-                        type="password" 
-                        id="password" 
-                        placeholder="Password" 
-                        required
-                        autocomplete="current-password"
-                    >
+                    <div class="input-icon"><i class="fas fa-lock"></i></div>
+                    <input type="password" id="password" placeholder="Password" required autocomplete="current-password">
                     <button type="button" class="toggle-password" onclick="togglePassword()">
                         <i class="fas fa-eye"></i>
                     </button>
                 </div>
-
                 <div class="form-options">
                     <label class="checkbox-label">
                         <input type="checkbox" id="rememberMe">
@@ -63,19 +44,12 @@
                     </label>
                     <a href="#" class="forgot-link">Forgot password?</a>
                 </div>
-
                 <button type="submit" class="auth-btn primary-btn">
-                    <i class="fas fa-arrow-right-to-bracket"></i>
-                    Sign In
+                    <i class="fas fa-arrow-right-to-bracket"></i> Sign In
                 </button>
-
-                <div class="auth-divider">
-                    <span>or</span>
-                </div>
-
+                <div class="auth-divider"><span>or</span></div>
                 <button type="button" class="social-btn" onclick="window.location.href='/signup'">
-                    <i class="fas fa-user-plus"></i>
-                    Create New Account
+                    <i class="fas fa-user-plus"></i> Create New Account
                 </button>
             </form>
 
@@ -89,169 +63,107 @@
                 <i class="fas fa-quote-left"></i>
                 <p>RAG Flow has completely transformed how I work with documents. The AI understands context perfectly!</p>
                 <div class="testimonial-author">
-                    <div class="author-avatar">
-                        <i class="fas fa-user-circle"></i>
-                    </div>
-                    <div>
-                        <strong>Sarah Johnson</strong>
-                        <span>Product Manager</span>
-                    </div>
+                    <div class="author-avatar"><i class="fas fa-user-circle"></i></div>
+                    <div><strong>Sarah Johnson</strong><span>Product Manager</span></div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Create floating particles
         function createParticles() {
             const container = document.getElementById('particleBg');
             for (let i = 0; i < 100; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.top = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 20 + 's';
-                particle.style.animationDuration = (15 + Math.random() * 20) + 's';
-                particle.style.width = (1 + Math.random() * 5) + 'px';
-                particle.style.height = particle.style.width;
-                particle.style.background = `rgba(${155 + Math.random() * 100}, ${100 + Math.random() * 100}, ${200 + Math.random() * 55}, ${0.3 + Math.random() * 0.5})`;
-                container.appendChild(particle);
+                const p = document.createElement('div');
+                p.className = 'particle';
+                p.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;animation-delay:${Math.random()*20}s;animation-duration:${15+Math.random()*20}s;width:${1+Math.random()*5}px;height:${1+Math.random()*5}px;background:rgba(${155+Math.random()*100},${100+Math.random()*100},${200+Math.random()*55},${0.3+Math.random()*0.5})`;
+                container.appendChild(p);
             }
         }
         createParticles();
 
-        // Toggle password visibility
         function togglePassword() {
-            const passwordInput = document.getElementById('password');
-            const toggleBtn = document.querySelector('.toggle-password i');
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                toggleBtn.classList.remove('fa-eye');
-                toggleBtn.classList.add('fa-eye-slash');
-            } else {
-                passwordInput.type = 'password';
-                toggleBtn.classList.remove('fa-eye-slash');
-                toggleBtn.classList.add('fa-eye');
-            }
+            const input = document.getElementById('password');
+            const icon  = document.querySelector('.toggle-password i');
+            input.type  = input.type === 'password' ? 'text' : 'password';
+            icon.classList.toggle('fa-eye');
+            icon.classList.toggle('fa-eye-slash');
         }
 
-        // Handle login form submission
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
-            const email = document.getElementById('email').value;
+            const email    = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            const rememberMe = document.getElementById('rememberMe').checked;
-            
-            const submitBtn = document.querySelector('.auth-btn');
-            const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
-            submitBtn.disabled = true;
-            
+            const btn      = document.querySelector('.auth-btn');
+            const original = btn.innerHTML;
+
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
+            btn.disabled  = true;
+
             try {
                 const response = await fetch('/api/auth/login', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
                     body: JSON.stringify({ email, password })
                 });
-                
                 const data = await response.json();
-                
+
                 if (response.ok) {
-                    // Show success message
                     showNotification('Login successful! Redirecting...', 'success');
-                    
-                    // Store user info in sessionStorage
                     sessionStorage.setItem('user', JSON.stringify(data.user));
-                    
-                    // Redirect to dashboard
-                    setTimeout(() => {
-                        window.location.href = '/dashboard';
-                    }, 1000);
+                    setTimeout(() => { window.location.href = '/dashboard'; }, 1000);
                 } else {
                     showNotification(data.error || 'Login failed', 'error');
-                    submitBtn.innerHTML = originalText;
-                    submitBtn.disabled = false;
+                    btn.innerHTML = original;
+                    btn.disabled  = false;
                 }
             } catch (error) {
                 console.error('Login error:', error);
                 showNotification('Network error. Please try again.', 'error');
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
+                btn.innerHTML = original;
+                btn.disabled  = false;
             }
         });
 
-        // Show notification
         function showNotification(message, type) {
-            const notification = document.createElement('div');
-            notification.className = `notification ${type}`;
-            notification.innerHTML = `
-                <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
-                <span>${message}</span>
-            `;
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.remove();
-            }, 3000);
+            const n = document.createElement('div');
+            n.className = `notification ${type}`;
+            n.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i><span>${message}</span>`;
+            document.body.appendChild(n);
+            setTimeout(() => n.remove(), 3000);
         }
 
-        // Check if already logged in
-        async function checkAuth() {
+        // Only redirect to dashboard if already logged in
+        // On network error: do NOTHING — don't redirect, don't loop
+        async function checkAlreadyLoggedIn() {
             try {
-                const response = await fetch('/api/auth/me');
+                const response = await fetch('/api/auth/me', { credentials: 'include' });
                 if (response.ok) {
                     const data = await response.json();
-                    if (data.user) {
-                        window.location.href = '/dashboard';
-                    }
+                    if (data.user) window.location.href = '/dashboard';
                 }
+                // 401 = not logged in = stay on login page (no redirect)
             } catch (error) {
-                console.log('Not authenticated');
+                // Network error = stay on login page (no redirect)
+                console.log('Not logged in or network error');
             }
         }
-        checkAuth();
+        checkAlreadyLoggedIn();
     </script>
 
     <style>
-        /* Additional styles for notifications */
         .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 25px;
-            border-radius: 15px;
-            background: white;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            z-index: 10000;
-            animation: slideInRight 0.3s ease;
-            font-weight: 500;
+            position: fixed; top: 20px; right: 20px; padding: 15px 25px;
+            border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: flex; align-items: center; gap: 12px;
+            z-index: 10000; animation: slideInRight 0.3s ease; font-weight: 500;
         }
-        
-        .notification.success {
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
-        }
-        
-        .notification.error {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            color: white;
-        }
-        
+        .notification.success { background: linear-gradient(135deg,#10b981,#059669); color: white; }
+        .notification.error   { background: linear-gradient(135deg,#ef4444,#dc2626); color: white; }
         @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(100px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
+            from { opacity:0; transform:translateX(100px); }
+            to   { opacity:1; transform:translateX(0); }
         }
     </style>
 </body>

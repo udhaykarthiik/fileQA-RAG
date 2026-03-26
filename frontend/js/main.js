@@ -1,57 +1,56 @@
-// Main initialization
+// main.js — only runs on /home page
+// DO NOT add redirects here — they cause reload loops on other pages
+
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('FileQA Chatbot initialized');
-    
-    // Check authentication status
-    checkAuthStatus();
-    
-    // Check if we're on chat page
-    if (window.location.pathname === '/chat') {
-        initializeChat();
+    console.log('main.js loaded on:', window.location.pathname);
+
+    // Only run auth UI update on home page
+    // dashboard.html, chat.html, login.html, signup.html handle their own auth
+    if (window.location.pathname === '/home' || window.location.pathname === '/') {
+        checkAuthStatus();
     }
 });
 
 async function checkAuthStatus() {
     try {
-        const response = await fetch('/api/auth/me', {
-            credentials: 'include'
-        });
-        
+        const response = await fetch('/api/auth/me', { credentials: 'include' });
+
         if (response.ok) {
             const data = await response.json();
-            console.log('User authenticated:', data.user);
-            
-            // Update UI for authenticated user if needed
-            const authButtons = document.getElementById('authButtons');
-            const userMenu = document.getElementById('userMenu');
-            
-            if (authButtons && userMenu) {
-                authButtons.style.display = 'none';
-                userMenu.style.display = 'flex';
-                
-                const userNameSpan = document.getElementById('userName');
-                if (userNameSpan) {
-                    userNameSpan.textContent = data.user.username || data.user.full_name;
-                }
+            if (data.user) {
+                showLoggedInNav(data.user);
+            } else {
+                showLoggedOutNav();
             }
         } else {
-            console.log('User not authenticated');
-            
-            // Update UI for unauthenticated user
-            const authButtons = document.getElementById('authButtons');
-            const userMenu = document.getElementById('userMenu');
-            
-            if (authButtons && userMenu) {
-                authButtons.style.display = 'flex';
-                userMenu.style.display = 'none';
-            }
+            // 401 on home page = just show logged-out UI, never redirect
+            showLoggedOutNav();
         }
     } catch (error) {
+        // Network error — show logged-out UI, never redirect
         console.error('Auth check error:', error);
+        showLoggedOutNav();
     }
 }
 
-function initializeChat() {
-    console.log('Chat interface ready');
-    // Chat functionality will be handled by chat.js
+function showLoggedInNav(user) {
+    const authButtons = document.getElementById('authButtons');
+    const userMenu    = document.getElementById('userMenu');
+    const userName    = document.getElementById('userName');
+    const dashLink    = document.getElementById('dashboardLink');
+
+    if (authButtons) authButtons.style.display = 'none';
+    if (userMenu)    userMenu.style.display = 'flex';
+    if (userName)    userName.textContent = user.username || user.full_name || 'User';
+    if (dashLink)    dashLink.style.display = 'inline-flex';
+}
+
+function showLoggedOutNav() {
+    const authButtons = document.getElementById('authButtons');
+    const userMenu    = document.getElementById('userMenu');
+    const dashLink    = document.getElementById('dashboardLink');
+
+    if (authButtons) authButtons.style.display = 'flex';
+    if (userMenu)    userMenu.style.display = 'none';
+    if (dashLink)    dashLink.style.display = 'none';
 }

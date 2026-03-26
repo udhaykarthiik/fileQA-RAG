@@ -11,7 +11,6 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✨</text></svg>">
 </head>
 <body>
-    <!-- Animated Particle Background -->
     <div class="particle-bg" id="particleBg"></div>
     <div class="grid-overlay"></div>
 
@@ -28,69 +27,27 @@
 
             <form id="signupForm" class="auth-form">
                 <div class="input-group">
-                    <div class="input-icon">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <input 
-                        type="text" 
-                        id="fullName" 
-                        placeholder="Full name" 
-                        required
-                    >
+                    <div class="input-icon"><i class="fas fa-user"></i></div>
+                    <input type="text" id="fullName" placeholder="Full name" required>
                 </div>
-
                 <div class="input-group">
-                    <div class="input-icon">
-                        <i class="fas fa-at"></i>
-                    </div>
-                    <input 
-                        type="text" 
-                        id="username" 
-                        placeholder="Username" 
-                        required
-                        autocomplete="username"
-                    >
+                    <div class="input-icon"><i class="fas fa-at"></i></div>
+                    <input type="text" id="username" placeholder="Username" required autocomplete="username">
                 </div>
-
                 <div class="input-group">
-                    <div class="input-icon">
-                        <i class="fas fa-envelope"></i>
-                    </div>
-                    <input 
-                        type="email" 
-                        id="email" 
-                        placeholder="Email address" 
-                        required
-                        autocomplete="email"
-                    >
+                    <div class="input-icon"><i class="fas fa-envelope"></i></div>
+                    <input type="email" id="email" placeholder="Email address" required autocomplete="email">
                 </div>
-
                 <div class="input-group">
-                    <div class="input-icon">
-                        <i class="fas fa-lock"></i>
-                    </div>
-                    <input 
-                        type="password" 
-                        id="password" 
-                        placeholder="Password" 
-                        required
-                        autocomplete="new-password"
-                    >
+                    <div class="input-icon"><i class="fas fa-lock"></i></div>
+                    <input type="password" id="password" placeholder="Password" required autocomplete="new-password">
                     <button type="button" class="toggle-password" onclick="togglePassword()">
                         <i class="fas fa-eye"></i>
                     </button>
                 </div>
-
                 <div class="input-group">
-                    <div class="input-icon">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                    <input 
-                        type="password" 
-                        id="confirmPassword" 
-                        placeholder="Confirm password" 
-                        required
-                    >
+                    <div class="input-icon"><i class="fas fa-check-circle"></i></div>
+                    <input type="password" id="confirmPassword" placeholder="Confirm password" required>
                 </div>
 
                 <div class="password-strength" id="passwordStrength">
@@ -106,17 +63,11 @@
                 </div>
 
                 <button type="submit" class="auth-btn primary-btn">
-                    <i class="fas fa-user-plus"></i>
-                    Create Account
+                    <i class="fas fa-user-plus"></i> Create Account
                 </button>
-
-                <div class="auth-divider">
-                    <span>or</span>
-                </div>
-
+                <div class="auth-divider"><span>or</span></div>
                 <button type="button" class="social-btn" onclick="window.location.href='/login'">
-                    <i class="fas fa-sign-in-alt"></i>
-                    Already have an account? Sign In
+                    <i class="fas fa-sign-in-alt"></i> Already have an account? Sign In
                 </button>
             </form>
 
@@ -130,300 +81,157 @@
                 <h3>Why join RAG Flow?</h3>
                 <div class="feature-item">
                     <i class="fas fa-file-pdf"></i>
-                    <div>
-                        <strong>Upload Any Document</strong>
-                        <p>PDF, TXT, and more formats coming soon</p>
-                    </div>
+                    <div><strong>Upload Any Document</strong><p>PDF, TXT, and more</p></div>
                 </div>
                 <div class="feature-item">
                     <i class="fas fa-brain"></i>
-                    <div>
-                        <strong>AI-Powered Answers</strong>
-                        <p>Get instant answers from your documents</p>
-                    </div>
+                    <div><strong>AI-Powered Answers</strong><p>Instant answers from your docs</p></div>
                 </div>
                 <div class="feature-item">
                     <i class="fas fa-cloud-upload-alt"></i>
-                    <div>
-                        <strong>Cloud Storage</strong>
-                        <p>Access your documents from anywhere</p>
-                    </div>
+                    <div><strong>Cloud Storage</strong><p>Access from anywhere</p></div>
                 </div>
                 <div class="feature-item">
                     <i class="fas fa-chart-line"></i>
-                    <div>
-                        <strong>Analytics Dashboard</strong>
-                        <p>Track your document insights</p>
-                    </div>
+                    <div><strong>Analytics Dashboard</strong><p>Track your document insights</p></div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Create floating particles
         function createParticles() {
             const container = document.getElementById('particleBg');
             for (let i = 0; i < 100; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.top = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 20 + 's';
-                particle.style.animationDuration = (15 + Math.random() * 20) + 's';
-                particle.style.width = (1 + Math.random() * 5) + 'px';
-                particle.style.height = particle.style.width;
-                particle.style.background = `rgba(${155 + Math.random() * 100}, ${100 + Math.random() * 100}, ${200 + Math.random() * 55}, ${0.3 + Math.random() * 0.5})`;
-                container.appendChild(particle);
+                const p = document.createElement('div');
+                p.className = 'particle';
+                p.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;animation-delay:${Math.random()*20}s;animation-duration:${15+Math.random()*20}s;width:${1+Math.random()*5}px;height:${1+Math.random()*5}px;background:rgba(${155+Math.random()*100},${100+Math.random()*100},${200+Math.random()*55},${0.3+Math.random()*0.5})`;
+                container.appendChild(p);
             }
         }
         createParticles();
 
-        // Toggle password visibility
         function togglePassword() {
-            const passwordInput = document.getElementById('password');
-            const toggleBtn = document.querySelector('.toggle-password i');
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                toggleBtn.classList.remove('fa-eye');
-                toggleBtn.classList.add('fa-eye-slash');
-            } else {
-                passwordInput.type = 'password';
-                toggleBtn.classList.remove('fa-eye-slash');
-                toggleBtn.classList.add('fa-eye');
-            }
+            const input = document.getElementById('password');
+            const icon  = document.querySelector('.toggle-password i');
+            input.type  = input.type === 'password' ? 'text' : 'password';
+            icon.classList.toggle('fa-eye');
+            icon.classList.toggle('fa-eye-slash');
         }
 
-        // Password strength meter
-        const passwordInput = document.getElementById('password');
-        const strengthBar = document.querySelector('.strength-bar');
-        const strengthText = document.querySelector('.strength-text');
-
-        passwordInput.addEventListener('input', function() {
-            const password = this.value;
-            const strength = checkPasswordStrength(password);
-            
-            strengthBar.className = 'strength-bar';
-            strengthBar.classList.add(strength.class);
-            strengthText.textContent = strength.text;
-            strengthText.className = 'strength-text';
-            strengthText.classList.add(strength.class);
+        // Password strength
+        document.getElementById('password').addEventListener('input', function() {
+            const strength = checkPasswordStrength(this.value);
+            const bar  = document.querySelector('.strength-bar');
+            const text = document.querySelector('.strength-text');
+            bar.className  = 'strength-bar '  + strength.cls;
+            text.className = 'strength-text ' + strength.cls;
+            text.textContent = strength.label;
         });
 
-        function checkPasswordStrength(password) {
+        function checkPasswordStrength(pw) {
             let score = 0;
-            if (password.length >= 8) score++;
-            if (password.match(/[a-z]/)) score++;
-            if (password.match(/[A-Z]/)) score++;
-            if (password.match(/[0-9]/)) score++;
-            if (password.match(/[^a-zA-Z0-9]/)) score++;
-            
-            if (score <= 1) return { class: 'weak', text: 'Weak password' };
-            if (score <= 3) return { class: 'medium', text: 'Medium password' };
-            return { class: 'strong', text: 'Strong password' };
+            if (pw.length >= 8)          score++;
+            if (/[a-z]/.test(pw))        score++;
+            if (/[A-Z]/.test(pw))        score++;
+            if (/[0-9]/.test(pw))        score++;
+            if (/[^a-zA-Z0-9]/.test(pw)) score++;
+            if (score <= 1) return { cls: 'weak',   label: 'Weak password' };
+            if (score <= 3) return { cls: 'medium', label: 'Medium password' };
+            return              { cls: 'strong', label: 'Strong password' };
         }
 
-        // Handle signup form submission
         document.getElementById('signupForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
-            const fullName = document.getElementById('fullName').value;
-            const username = document.getElementById('username').value;
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+            const fullName        = document.getElementById('fullName').value;
+            const username        = document.getElementById('username').value;
+            const email           = document.getElementById('email').value;
+            const password        = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
-            const termsChecked = document.getElementById('termsCheckbox').checked;
-            
-            // Validation
-            if (password !== confirmPassword) {
-                showNotification('Passwords do not match!', 'error');
-                return;
-            }
-            
-            if (password.length < 6) {
-                showNotification('Password must be at least 6 characters!', 'error');
-                return;
-            }
-            
-            if (!termsChecked) {
-                showNotification('Please agree to the Terms of Service', 'error');
-                return;
-            }
-            
-            const submitBtn = document.querySelector('.auth-btn');
-            const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating account...';
-            submitBtn.disabled = true;
-            
+
+            if (password !== confirmPassword) { showNotification('Passwords do not match!', 'error'); return; }
+            if (password.length < 6)          { showNotification('Password must be at least 6 characters!', 'error'); return; }
+            if (!document.getElementById('termsCheckbox').checked) { showNotification('Please agree to the Terms of Service', 'error'); return; }
+
+            const btn      = document.querySelector('.auth-btn');
+            const original = btn.innerHTML;
+            btn.innerHTML  = '<i class="fas fa-spinner fa-spin"></i> Creating account...';
+            btn.disabled   = true;
+
             try {
                 const response = await fetch('/api/auth/signup', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
                     body: JSON.stringify({ full_name: fullName, username, email, password })
                 });
-                
                 const data = await response.json();
-                
+
                 if (response.ok) {
-                    showNotification('Account created successfully! Redirecting...', 'success');
-                    
-                    // Store user info
+                    showNotification('Account created! Redirecting...', 'success');
                     sessionStorage.setItem('user', JSON.stringify(data.user));
-                    
-                    // Auto redirect to dashboard
-                    setTimeout(() => {
-                        window.location.href = '/dashboard';
-                    }, 1500);
+                    setTimeout(() => { window.location.href = '/dashboard'; }, 1500);
                 } else {
                     showNotification(data.error || 'Signup failed', 'error');
-                    submitBtn.innerHTML = originalText;
-                    submitBtn.disabled = false;
+                    btn.innerHTML = original;
+                    btn.disabled  = false;
                 }
             } catch (error) {
-                console.error('Signup error:', error);
                 showNotification('Network error. Please try again.', 'error');
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
+                btn.innerHTML = original;
+                btn.disabled  = false;
             }
         });
 
-        // Show notification
         function showNotification(message, type) {
-            const notification = document.createElement('div');
-            notification.className = `notification ${type}`;
-            notification.innerHTML = `
-                <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
-                <span>${message}</span>
-            `;
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.remove();
-            }, 3000);
+            const n = document.createElement('div');
+            n.className = `notification ${type}`;
+            n.innerHTML = `<i class="fas ${type==='success'?'fa-check-circle':'fa-exclamation-circle'}"></i><span>${message}</span>`;
+            document.body.appendChild(n);
+            setTimeout(() => n.remove(), 3000);
         }
 
-        // Check if already logged in
-        async function checkAuth() {
+        // Only redirect if already logged in — never redirect on error
+        async function checkAlreadyLoggedIn() {
             try {
-                const response = await fetch('/api/auth/me');
+                const response = await fetch('/api/auth/me', { credentials: 'include' });
                 if (response.ok) {
                     const data = await response.json();
-                    if (data.user) {
-                        window.location.href = '/dashboard';
-                    }
+                    if (data.user) window.location.href = '/dashboard';
                 }
-            } catch (error) {
-                console.log('Not authenticated');
-            }
+                // 401 or error = stay on signup page
+            } catch (e) { /* stay on page */ }
         }
-        checkAuth();
+        checkAlreadyLoggedIn();
     </script>
 
     <style>
-        /* Additional styles for notifications and password strength */
         .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 25px;
-            border-radius: 15px;
-            background: white;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            z-index: 10000;
-            animation: slideInRight 0.3s ease;
-            font-weight: 500;
+            position: fixed; top: 20px; right: 20px; padding: 15px 25px;
+            border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: flex; align-items: center; gap: 12px;
+            z-index: 10000; animation: slideInRight 0.3s ease; font-weight: 500;
         }
-        
-        .notification.success {
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
-        }
-        
-        .notification.error {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            color: white;
-        }
-        
+        .notification.success { background: linear-gradient(135deg,#10b981,#059669); color: white; }
+        .notification.error   { background: linear-gradient(135deg,#ef4444,#dc2626); color: white; }
         @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(100px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
+            from { opacity:0; transform:translateX(100px); }
+            to   { opacity:1; transform:translateX(0); }
         }
-        
-        .password-strength {
-            margin-top: -5px;
-            margin-bottom: 15px;
-        }
-        
-        .strength-bar {
-            height: 3px;
-            border-radius: 3px;
-            transition: all 0.3s ease;
-        }
-        
-        .strength-bar.weak {
-            width: 33%;
-            background: #ef4444;
-        }
-        
-        .strength-bar.medium {
-            width: 66%;
-            background: #f59e0b;
-        }
-        
-        .strength-bar.strong {
-            width: 100%;
-            background: #10b981;
-        }
-        
-        .strength-text {
-            font-size: 11px;
-            margin-top: 5px;
-            display: block;
-        }
-        
-        .strength-text.weak { color: #ef4444; }
+        .password-strength { margin: -5px 0 15px; }
+        .strength-bar { height: 3px; border-radius: 3px; transition: all 0.3s; }
+        .strength-bar.weak   { width: 33%; background: #ef4444; }
+        .strength-bar.medium { width: 66%; background: #f59e0b; }
+        .strength-bar.strong { width:100%; background: #10b981; }
+        .strength-text { font-size: 11px; margin-top: 5px; display: block; }
+        .strength-text.weak   { color: #ef4444; }
         .strength-text.medium { color: #f59e0b; }
         .strength-text.strong { color: #10b981; }
-        
-        .feature-list h3 {
-            color: white;
-            margin-bottom: 30px;
-            font-size: 24px;
-        }
-        
-        .feature-item {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 25px;
-            color: white;
-        }
-        
-        .feature-item i {
-            font-size: 24px;
-            color: #f093fb;
-            margin-top: 5px;
-        }
-        
-        .feature-item strong {
-            display: block;
-            margin-bottom: 5px;
-        }
-        
-        .feature-item p {
-            font-size: 13px;
-            opacity: 0.8;
-        }
+        .feature-list h3      { color: white; margin-bottom: 30px; font-size: 24px; }
+        .feature-item         { display: flex; gap: 15px; margin-bottom: 25px; color: white; }
+        .feature-item i       { font-size: 24px; color: #f093fb; margin-top: 5px; }
+        .feature-item strong  { display: block; margin-bottom: 5px; }
+        .feature-item p       { font-size: 13px; opacity: 0.8; }
     </style>
 </body>
 </html>
