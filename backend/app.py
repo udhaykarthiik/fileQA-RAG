@@ -1,15 +1,27 @@
 import os
 import sys
-from flask import Flask, send_from_directory, jsonify, request, session, redirect, url_for
-from flask_cors import CORS
-from dotenv import load_dotenv
+import gc
 import uuid
-from werkzeug.utils import secure_filename
 import time
 import sqlite3
 import bcrypt
-from functools import wraps
 from datetime import datetime, timedelta
+from functools import wraps
+from flask import Flask, send_from_directory, jsonify, request, session, redirect, url_for
+from flask_cors import CORS
+from dotenv import load_dotenv
+from werkzeug.utils import secure_filename
+
+# ============================================
+# MEMORY OPTIMIZATION - MUST BE AT THE TOP
+# ============================================
+# Set environment variables for memory optimization
+os.environ['OMP_NUM_THREADS'] = '1'
+os.environ['MKL_NUM_THREADS'] = '1'
+os.environ['NUMEXPR_NUM_THREADS'] = '1'
+
+# Force garbage collection on startup
+gc.collect()
 
 # Load environment variables
 load_dotenv()
@@ -210,7 +222,7 @@ project_root = os.path.dirname(current_dir)
 frontend_folder = os.path.join(project_root, 'frontend')
 
 print("=" * 60)
-print("🚀 FileQA Chatbot Starting...")
+print("🚀 RAG Flow Chatbot Starting...")
 print(f"📁 Environment: {'Render' if IS_RENDER else 'Local'}")
 print(f"📁 Frontend: {frontend_folder}")
 print(f"📁 Uploads: {app.config['UPLOAD_FOLDER']}")
@@ -834,7 +846,6 @@ if __name__ == '__main__':
     print("=" * 60 + "\n")
     
     # FORCE disable debug mode on Render
-    # Check if running on Render
     is_render = os.environ.get('RENDER', False)
     
     if is_render:
