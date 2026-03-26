@@ -5,6 +5,7 @@ services:
     repo: https://github.com/udhaykarthiik/fileQA-RAG
     plan: free
     healthCheckPath: /healthz
+    healthCheckTimeout: 300
     envVars:
       - key: GROQ_API_KEY
         sync: false

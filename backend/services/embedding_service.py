@@ -5,7 +5,7 @@ from typing import List, Dict, Any
 class EmbeddingService:
     """Handles text embedding generation using sentence transformers"""
     
-    def __init__(self, model_name='all-MiniLM-L6-v2'):
+    def __init__(self, model_name='paraphrase-MiniLM-L3-v2'):
         """Initialize the embedding model"""
         print(f"🔄 Loading embedding model: {model_name}...")
         self.model = SentenceTransformer(model_name)
